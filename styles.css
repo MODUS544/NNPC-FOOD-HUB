@@ -1,4 +1,4 @@
-/* NNPC Limited Corporate Design System - Food Hub & Workplace Services */
+/* Meal Point - NNPC Limited Workplace Food Ordering Platform Design System */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -22,28 +22,14 @@
   --slate-50: #f8fafc;
   
   --bg-gradient: linear-gradient(135deg, #f4f9f6 0%, #eef5f1 50%, #f8fafc 100%);
-  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.88);
   --glass-border: rgba(0, 102, 51, 0.12);
-  --glass-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+  --glass-shadow: 0 12px 32px -6px rgba(15, 23, 42, 0.09);
 
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-lg: 18px;
   --radius-xl: 24px;
-}
-
-/* Dark Mode Tokens */
-body.dark-mode {
-  --bg-gradient: linear-gradient(135deg, #07150e 0%, #0d1e16 50%, #0f172a 100%);
-  --glass-bg: rgba(15, 23, 42, 0.85);
-  --glass-border: rgba(255, 192, 0, 0.15);
-  --glass-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-  --slate-900: #f8fafc;
-  --slate-800: #f1f5f9;
-  --slate-700: #cbd5e1;
-  --slate-600: #94a3b8;
-  --slate-100: #1e293b;
-  --slate-50: #0f172a;
 }
 
 * {
@@ -72,7 +58,7 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.02);
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 102, 51, 0.3);
@@ -82,7 +68,22 @@ body {
   background: var(--nnpc-green);
 }
 
-/* Header & Top Bar */
+/* Announcement Top Bar */
+.announcement-bar {
+  background: linear-gradient(90deg, #d49e00 0%, var(--nnpc-gold) 50%, #d49e00 100%);
+  color: var(--slate-900);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Top Navigation Bar */
 .top-header {
   position: sticky;
   top: 0;
@@ -121,19 +122,37 @@ body {
 }
 
 .brand-text h1 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--nnpc-green);
-  letter-spacing: -0.3px;
+  letter-spacing: -0.4px;
   line-height: 1.1;
 }
 
 .brand-text p {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--nnpc-gold-dark);
   text-transform: uppercase;
   letter-spacing: 0.8px;
+}
+
+/* Delivery Location Picker Pill */
+.delivery-picker-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--slate-50);
+  border: 1px solid var(--glass-border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delivery-picker-pill:hover {
+  border-color: var(--nnpc-green);
+  background: var(--nnpc-green-light);
 }
 
 /* Role Switcher Floating Banner */
@@ -144,15 +163,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 12px;
   border-bottom: 2px solid var(--nnpc-gold);
-}
-
-.role-switcher-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
 }
 
 .role-chips {
@@ -162,7 +174,7 @@ body {
 }
 
 .role-chip {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
   border: 1px solid rgba(255, 255, 255, 0.25);
   color: #fff;
   padding: 4px 12px;
@@ -185,7 +197,7 @@ body {
   background: var(--nnpc-gold);
   color: var(--slate-900);
   border-color: #fff;
-  font-weight: 700;
+  font-weight: 800;
   box-shadow: 0 0 10px var(--nnpc-gold-glow);
 }
 
@@ -242,10 +254,6 @@ body {
   box-shadow: 0 4px 14px var(--nnpc-green-glow);
 }
 
-.nav-item.active svg {
-  stroke: var(--nnpc-gold);
-}
-
 .main-content {
   flex: 1;
   padding: 28px 36px;
@@ -267,120 +275,26 @@ body {
   box-shadow: 0 14px 36px -5px rgba(15, 23, 42, 0.12);
 }
 
-/* Cafeteria Outlet Selector Bar */
-.cafeteria-outlets-bar {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  margin-bottom: 24px;
-}
-
-.outlet-card {
-  flex: 0 0 240px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.outlet-card:hover, .outlet-card.active {
-  border-color: var(--nnpc-green);
-  background: var(--nnpc-green-light);
-  transform: translateY(-2px);
-}
-
-.outlet-card.active {
-  box-shadow: 0 4px 16px var(--nnpc-green-glow);
-  border-left: 4px solid var(--nnpc-green);
-}
-
-.outlet-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--nnpc-green);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-/* Menu Category Filter Pills */
-.category-filter-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.filter-pills {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.pill-btn {
-  padding: 8px 16px;
-  border-radius: 30px;
-  border: 1px solid var(--glass-border);
-  background: var(--glass-bg);
-  color: var(--slate-700);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.pill-btn:hover {
-  border-color: var(--nnpc-green);
-  color: var(--nnpc-green);
-}
-
-.pill-btn.active {
-  background: var(--nnpc-green);
-  color: #fff;
-  border-color: var(--nnpc-green);
-  box-shadow: 0 4px 12px var(--nnpc-green-glow);
-}
-
-/* Food Items Grid */
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.food-card {
+/* Glovo-Inspired Food Card */
+.glovo-meal-card {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.25 ease;
+  transition: all 0.25s ease;
   position: relative;
 }
 
-.food-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 32px rgba(0, 102, 51, 0.12);
-  border-color: rgba(0, 102, 51, 0.3);
+.glovo-meal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 38px rgba(0, 102, 51, 0.14);
+  border-color: rgba(0, 102, 51, 0.35);
 }
 
 .food-img-container {
-  height: 160px;
+  height: 170px;
   position: relative;
   overflow: hidden;
   background: #f1f5f9;
@@ -393,8 +307,36 @@ body {
   transition: transform 0.4s ease;
 }
 
-.food-card:hover .food-img {
-  transform: scale(1.06);
+.glovo-meal-card:hover .food-img {
+  transform: scale(1.07);
+}
+
+.heart-fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.heart-fav-btn:hover {
+  transform: scale(1.15);
+}
+
+.heart-fav-btn.active {
+  background: #fee2e2;
+  color: #ef4444;
 }
 
 .dietary-badges {
@@ -493,128 +435,87 @@ body {
   box-shadow: 0 4px 12px var(--nnpc-green-glow);
 }
 
-/* Meal Wallet & Subsidy Card */
-.wallet-card-widget {
-  background: linear-gradient(135deg, var(--nnpc-green-dark) 0%, var(--nnpc-green) 100%);
-  color: #fff;
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--nnpc-gold);
-  box-shadow: 0 8px 24px var(--nnpc-green-glow);
-}
-
-.wallet-card-widget::after {
-  content: '';
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 140px;
-  height: 140px;
-  background: rgba(255, 192, 0, 0.15);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-/* Kitchen Display System (KDS) View */
-.kds-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-}
-
-.kds-ticket {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  border-left: 6px solid var(--nnpc-gold);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-}
-
-.kds-ticket.preparing {
-  border-left-color: #3b82f6;
-}
-
-.kds-ticket.ready {
-  border-left-color: #10b981;
-}
-
-.kds-header {
+/* Category Filter Pills */
+.category-filter-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 10px;
-  margin-bottom: 12px;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
-.order-no {
-  font-weight: 800;
-  font-size: 16px;
-  color: var(--slate-900);
-}
-
-.order-time {
-  font-size: 12px;
-  color: var(--slate-500);
-  font-weight: 600;
-}
-
-.kds-items-list {
-  margin-bottom: 16px;
-  flex: 1;
-}
-
-.kds-item {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 4px 0;
-}
-
-.kds-actions {
+.filter-pills {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
-.kds-btn {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: 700;
-  font-size: 12px;
+.pill-btn {
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--slate-700);
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
-  text-align: center;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.btn-prepare {
-  background: #3b82f6;
-  color: #fff;
+.pill-btn:hover {
+  border-color: var(--nnpc-green);
+  color: var(--nnpc-green);
 }
-.btn-ready {
-  background: #10b981;
-  color: #fff;
-}
-.btn-delivered {
+
+.pill-btn.active {
   background: var(--nnpc-green);
   color: #fff;
+  border-color: var(--nnpc-green);
+  box-shadow: 0 4px 12px var(--nnpc-green-glow);
 }
 
-/* Dynamic QR Code Badge */
-.qr-container {
-  background: #fff;
-  padding: 16px;
-  border-radius: 12px;
-  display: inline-block;
-  border: 2px solid var(--nnpc-green);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  text-align: center;
+/* Order Stepper Widget */
+.order-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin: 20px 0;
+}
+
+.stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.stepper-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.stepper-step.completed .stepper-icon {
+  background: var(--nnpc-green);
+}
+
+.stepper-step.current .stepper-icon {
+  background: var(--nnpc-gold);
+  color: var(--slate-900);
+  box-shadow: 0 0 14px var(--nnpc-gold-glow);
 }
 
 /* AI Assistant Floating Button & Modal */
@@ -656,7 +557,6 @@ body {
   flex-direction: column;
   z-index: 999;
   overflow: hidden;
-  transition: all 0.3s ease;
 }
 
 .ai-modal-header {
@@ -699,37 +599,11 @@ body {
   border-bottom-right-radius: 2px;
 }
 
-.ai-suggestions {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.02);
-  border-top: 1px solid var(--slate-100);
-}
-
-.suggestion-chip {
-  white-space: nowrap;
-  background: #fff;
-  border: 1px solid var(--nnpc-green);
-  color: var(--nnpc-green);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.suggestion-chip:hover {
-  background: var(--nnpc-green);
-  color: #fff;
-}
-
-/* Modal Overlay & Drawers */
+/* Modals & Drawers */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(4px);
   z-index: 1000;
   display: flex;
@@ -748,8 +622,8 @@ body {
 .cart-drawer {
   position: fixed;
   top: 0;
-  right: -420px;
-  width: 420px;
+  right: -440px;
+  width: 440px;
   height: 100vh;
   background: #fff;
   box-shadow: -10px 0 40px rgba(0,0,0,0.15);

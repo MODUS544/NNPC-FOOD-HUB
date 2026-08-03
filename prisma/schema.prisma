@@ -1,4 +1,4 @@
-// NNPC Limited Workplace Services: Food Hub & Cafeteria Database Schema
+// Meal Point - NNPC Limited Workplace Food Ordering Platform
 // Prisma Schema Definition for PostgreSQL
 
 datasource db {
@@ -12,10 +12,16 @@ generator client {
 
 enum UserRole {
   SUPER_ADMIN
-  CAFETERIA_ADMIN
-  DEPT_HEAD
+  CAFETERIA_VENDOR
   EMPLOYEE
   INTERN
+  CONTRACTOR
+}
+
+enum VendorApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum DietaryType {
@@ -41,7 +47,7 @@ enum CategoryType {
 enum OrderStatus {
   RECEIVED
   PREPARING
-  READY_FOR_PICKUP
+  READY
   DELIVERED
   CANCELLED
 }
@@ -52,64 +58,52 @@ enum PaymentMethod {
   PERSONAL_CARD
 }
 
-enum TransactionType {
-  SUBSIDY_CREDIT
-  TOPUP_CREDIT
-  MEAL_PURCHASE
-  REFUND
-}
-
 model User {
-  id               String              @id @default(uuid())
-  staffId          String              @unique
-  email            String              @unique
+  id               String            @id @default(uuid())
+  staffId          String            @unique
+  email            String            @unique
   fullName         String
-  role             UserRole            @default(EMPLOYEE)
-  departmentId     String?
-  department       Department?         @relation(fields: [departmentId], references: [id])
+  role             UserRole          @default(EMPLOYEE)
+  contractorCompany String?         // For CONTRACTOR role
+  department       String?
+  officeBuilding   String?           // e.g. "NNPC HQ Tower A"
+  officeFloor      String?           // e.g. "Floor 7"
+  officeDesk       String?           // e.g. "Desk 712"
   avatarUrl        String?
   phoneNumber      String?
+  mfaEnabled       Boolean           @default(false)
   wallet           MealWallet?
   orders           FoodOrder[]
-  approvedOrders   FoodOrder[]         @relation("ApprovedBySupervisor")
-  managedVendors   CafeteriaVendor[]   @relation("VendorAdmin")
+  favorites        MealFavorite[]
+  managedVendor    CafeteriaVendor?  @relation("VendorAdmin")
   auditLogs        AuditLog[]
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
   @@index([staffId])
   @@index([email])
 }
 
-model Department {
-  id             String      @id @default(uuid())
-  name           String      @unique
-  code           String      @unique
-  headStaffId    String?
-  monthlyBudget  Float       @default(500000.0)
-  users          User[]
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-}
-
 model CafeteriaVendor {
-  id             String      @id @default(uuid())
-  code           String      @unique
+  id             String               @id @default(uuid())
+  code           String               @unique
   name           String
   location       String
-  openingTime    String      @default("07:30")
-  closingTime    String      @default("18:00")
-  isOperating    Boolean     @default(true)
-  adminId        String?
-  admin          User?       @relation("VendorAdmin", fields: [adminId], references: [id])
+  contactPhone   String
+  approvalStatus VendorApprovalStatus @default(APPROVED)
+  openingTime    String               @default("07:30")
+  closingTime    String               @default("18:00")
+  isOperating    Boolean              @default(true)
+  adminId        String?              @unique
+  admin          User?                @relation("VendorAdmin", fields: [adminId], references: [id])
   menuItems      MenuItem[]
   orders         FoodOrder[]
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
 }
 
 model MenuItem {
-  id             String        @id @default(uuid())
+  id             String          @id @default(uuid())
   vendorId       String
   vendor         CafeteriaVendor @relation(fields: [vendorId], references: [id], onDelete: Cascade)
   name           String
@@ -118,24 +112,36 @@ model MenuItem {
   price          Float
   subsidizedPrice Float?
   imageUrl       String?
-  isAvailable    Boolean       @default(true)
-  stockQuantity  Int           @default(50)
-  preparationTimeMinutes Int   @default(15)
+  isAvailable    Boolean         @default(true)
+  stockQuantity  Int             @default(50)
+  prepTimeMinutes Int            @default(15)
   calories       Int?
   dietaryTags    DietaryType[]
   orderItems     OrderItem[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  favorites      MealFavorite[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   @@index([vendorId, category])
+}
+
+model MealFavorite {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, menuItemId])
 }
 
 model MealWallet {
   id                 String              @id @default(uuid())
   userId             String              @unique
   user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subsidyBalance     Float               @default(15000.0) // Monthly NNPC subsidy in NGN
-  personalBalance    Float               @default(5000.0)  // Personal wallet top-up balance
+  subsidyBalance     Float               @default(15000.0)
+  personalBalance    Float               @default(5000.0)
   monthlySubsidyLimit Float              @default(15000.0)
   transactions       WalletTransaction[]
   createdAt          DateTime            @default(now())
@@ -143,60 +149,68 @@ model MealWallet {
 }
 
 model WalletTransaction {
-  id             String          @id @default(uuid())
+  id             String     @id @default(uuid())
   walletId       String
-  wallet         MealWallet      @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  wallet         MealWallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
   amount         Float
-  type           TransactionType
+  type           String     // "SUBSIDY_CREDIT" | "MEAL_PURCHASE" | "TOPUP"
   description    String
-  referenceNo    String          @unique
-  createdAt      DateTime        @default(now())
+  referenceNo    String     @unique
+  createdAt      DateTime   @default(now())
 }
 
 model FoodOrder {
-  id                String          @id @default(uuid())
-  orderNumber       String          @unique
-  userId            String
-  user              User            @relation(fields: [userId], references: [id])
-  vendorId          String
-  vendor            CafeteriaVendor @relation(fields: [vendorId], references: [id])
-  status            OrderStatus     @default(RECEIVED)
-  paymentMethod     PaymentMethod   @default(COMPANY_SUBSIDY_WALLET)
-  subtotal          Float
-  subsidyApplied    Float           @default(0.0)
-  totalPaid         Float
-  pickupTimeSlot    String          // e.g. "12:45 PM"
+  id                  String          @id @default(uuid())
+  orderNumber         String          @unique
+  userId              String
+  user                User            @relation(fields: [userId], references: [id])
+  vendorId            String
+  vendor              CafeteriaVendor @relation(fields: [vendorId], references: [id])
+  status              OrderStatus     @default(RECEIVED)
+  paymentMethod       PaymentMethod   @default(COMPANY_SUBSIDY_WALLET)
+  subtotal            Float
+  subsidyApplied      Float           @default(0.0)
+  totalPaid           Float
+  deliveryBuilding    String
+  deliveryFloor       String
+  deliveryDesk        String
+  pickupTimeSlot      String
   specialInstructions String?
-  qrPickupCode      String          @unique
-  supervisorId      String?
-  supervisor        User?           @relation("ApprovedBySupervisor", fields: [supervisorId], references: [id])
-  items             OrderItem[]
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  qrPickupCode        String          @unique
+  items               OrderItem[]
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 
   @@index([userId, status])
   @@index([vendorId, status])
 }
 
 model OrderItem {
-  id             String      @id @default(uuid())
-  orderId        String
-  order          FoodOrder   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  menuItemId     String
-  menuItem       MenuItem    @relation(fields: [menuItemId], references: [id])
-  quantity       Int         @default(1)
-  unitPrice      Float
-  totalPrice     Float
+  id         String    @id @default(uuid())
+  orderId    String
+  order      FoodOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String
+  menuItem   MenuItem  @relation(fields: [menuItemId], references: [id])
+  quantity   Int       @default(1)
+  unitPrice  Float
+  totalPrice Float
+}
+
+model Announcement {
+  id        String   @id @default(uuid())
+  title     String
+  message   String
+  priority  String   @default("INFO") // "INFO" | "WARNING" | "URGENT"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
 }
 
 model AuditLog {
-  id             String      @id @default(uuid())
-  userId         String?
-  user           User?       @relation(fields: [userId], references: [id])
-  action         String
-  entity         String
-  entityId       String?
-  ipAddress      String?
-  details        String?
-  createdAt      DateTime    @default(now())
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  details   String?
+  createdAt DateTime @default(now())
 }
