@@ -630,29 +630,67 @@ function renderWalletView(container) {
 function renderVendorView(container) {
   container.innerHTML = `
     <div class="section-header">
-      <h2 class="section-title">👨‍🍳 Kitchen Display System (KDS) - Vendor Dashboard</h2>
+      <h2 class="section-title">👨‍🍳 Vendor Dashboard & Menu Management</h2>
+      <button onclick="openVendorDishModal()" class="btn-add-cart" style="padding:10px 18px;">➕ Add New Dish / Price</button>
     </div>
 
-    <!-- Meal Availability Toggle Grid -->
-    <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid var(--slate-200); margin-bottom:28px;">
-      <h3 style="font-size:14px; font-weight:800; margin-bottom:12px;">🍲 Manage Meal Availability (Available / Sold Out)</h3>
-      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:14px;">
-        ${state.menuItems.map(item => `
-          <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--slate-50); border-radius:10px; border:1px solid var(--slate-200);">
-            <span style="font-size:12px; font-weight:700;">${item.name}</span>
-            <label class="toggle-switch">
-              <input type="checkbox" ${item.isAvailable ? 'checked' : ''} onchange="toggleMealAvailability('${item.id}')">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        `).join('')}
+    <!-- Vendor Menu Items Management Table -->
+    <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid var(--slate-200); margin-bottom:28px; box-shadow:var(--card-shadow);">
+      <h3 style="font-size:14px; font-weight:800; margin-bottom:14px; color:var(--slate-900);">🍲 Cafeteria Menu Items & Pricing</h3>
+      
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:12px;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--slate-200); color:var(--slate-500); text-transform:uppercase; font-size:10px; font-weight:800;">
+              <th style="padding:10px;">Dish</th>
+              <th style="padding:10px;">Category</th>
+              <th style="padding:10px;">Standard Price</th>
+              <th style="padding:10px;">Subsidized Price</th>
+              <th style="padding:10px;">Status</th>
+              <th style="padding:10px; text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.menuItems.map(item => `
+              <tr style="border-bottom:1px solid var(--slate-100);">
+                <td style="padding:12px 10px; font-weight:800; color:var(--slate-900);">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="${item.image}" alt="${item.name}" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
+                    <div>
+                      <div>${item.name}</div>
+                      <div style="font-size:10px; color:var(--slate-400); font-weight:600;">Prep: ${item.prepTime}m • Stock: ${item.stock}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="padding:10px; font-weight:600; color:var(--slate-600);">${item.category.replace('_', ' ')}</td>
+                <td style="padding:10px; font-weight:700; color:var(--slate-500); text-decoration:line-through;">₦${item.price.toLocaleString()}</td>
+                <td style="padding:10px; font-weight:800; color:var(--nnpc-green);">₦${item.subsidizedPrice.toLocaleString()}</td>
+                <td style="padding:10px;">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <label class="toggle-switch">
+                      <input type="checkbox" ${item.isAvailable ? 'checked' : ''} onchange="toggleMealAvailability('${item.id}')">
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span style="font-size:11px; font-weight:700; color:${item.isAvailable ? 'var(--nnpc-green)' : 'var(--nnpc-red)'};">
+                      ${item.isAvailable ? 'Available' : 'Sold Out'}
+                    </span>
+                  </div>
+                </td>
+                <td style="padding:10px; text-align:right;">
+                  <button onclick="openVendorDishModal('${item.id}')" class="category-pill-btn" style="padding:4px 10px; font-size:11px; display:inline-flex;">✏️ Edit</button>
+                  <button onclick="deleteVendorDish('${item.id}')" style="background:var(--nnpc-red-light); color:var(--nnpc-red); border:1px solid rgba(217,0,12,0.2); padding:4px 10px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer; margin-left:4px;">🗑️ Delete</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Active Orders Management -->
+    <!-- Active Kitchen Orders (KDS) -->
     <h3 style="font-size:14px; font-weight:800; margin-bottom:12px;">📦 Incoming Workplace Orders</h3>
     ${state.orders.map(order => `
-      <div style="background:#fff; border-radius:12px; padding:18px; border:1px solid var(--slate-200); margin-bottom:14px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="background:#fff; border-radius:12px; padding:18px; border:1px solid var(--slate-200); margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--card-shadow);">
         <div>
           <span class="kds-status-badge kds-status-${order.status}">${order.status}</span>
           <span style="font-size:14px; font-weight:800; margin-left:10px;">${order.id} • ${order.customerName}</span>
@@ -899,8 +937,123 @@ function toggleMealAvailability(itemId) {
   const item = state.menuItems.find(i => i.id === itemId);
   if (item) {
     item.isAvailable = !item.isAvailable;
+    renderMainContent();
     showToast(`${item.name} marked as ${item.isAvailable ? 'Available' : 'Sold Out'}`);
   }
+}
+
+// Vendor Menu Item Management
+function openVendorDishModal(itemId = null) {
+  const modal = document.getElementById('vendor-dish-modal');
+  const title = document.getElementById('vendor-modal-title');
+  const editId = document.getElementById('vendor-dish-edit-id');
+  const nameInput = document.getElementById('vendor-dish-name');
+  const catInput = document.getElementById('vendor-dish-category');
+  const priceInput = document.getElementById('vendor-dish-price');
+  const subPriceInput = document.getElementById('vendor-dish-subsidized-price');
+  const prepInput = document.getElementById('vendor-dish-prep-time');
+  const descInput = document.getElementById('vendor-dish-desc');
+  const imgInput = document.getElementById('vendor-dish-image');
+  const availInput = document.getElementById('vendor-dish-available');
+
+  if (itemId) {
+    const item = state.menuItems.find(i => i.id === itemId);
+    if (item) {
+      title.innerText = 'Edit Cafeteria Dish & Price';
+      editId.value = item.id;
+      nameInput.value = item.name;
+      catInput.value = item.category;
+      priceInput.value = item.price;
+      subPriceInput.value = item.subsidizedPrice;
+      prepInput.value = item.prepTime;
+      descInput.value = item.description;
+      imgInput.value = item.image;
+      availInput.checked = item.isAvailable;
+    }
+  } else {
+    title.innerText = 'Add New Cafeteria Dish';
+    editId.value = '';
+    nameInput.value = '';
+    catInput.value = 'LOCAL_DISHES';
+    priceInput.value = '';
+    subPriceInput.value = '';
+    prepInput.value = '12';
+    descInput.value = '';
+    imgInput.value = '';
+    availInput.checked = true;
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeVendorDishModal() {
+  document.getElementById('vendor-dish-modal').style.display = 'none';
+}
+
+function saveVendorDish() {
+  const editId = document.getElementById('vendor-dish-edit-id').value;
+  const name = document.getElementById('vendor-dish-name').value.trim();
+  const category = document.getElementById('vendor-dish-category').value;
+  const price = parseInt(document.getElementById('vendor-dish-price').value) || 0;
+  const subsidizedPrice = parseInt(document.getElementById('vendor-dish-subsidized-price').value) || 0;
+  const prepTime = parseInt(document.getElementById('vendor-dish-prep-time').value) || 10;
+  const description = document.getElementById('vendor-dish-desc').value.trim();
+  let image = document.getElementById('vendor-dish-image').value.trim();
+  const isAvailable = document.getElementById('vendor-dish-available').checked;
+
+  if (!name || price <= 0 || subsidizedPrice <= 0) {
+    showToast('Please fill in dish name and prices!');
+    return;
+  }
+
+  if (!image) {
+    image = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';
+  }
+
+  if (editId) {
+    const item = state.menuItems.find(i => i.id === editId);
+    if (item) {
+      item.name = name;
+      item.category = category;
+      item.price = price;
+      item.subsidizedPrice = subsidizedPrice;
+      item.prepTime = prepTime;
+      item.description = description;
+      item.image = image;
+      item.isAvailable = isAvailable;
+      showToast(`Updated ${name} successfully!`);
+    }
+  } else {
+    const newItem = {
+      id: `item-${Date.now()}`,
+      cafeteriaId: 'caf-1',
+      name,
+      category,
+      price,
+      subsidizedPrice,
+      prepTime,
+      description: description || 'Delicious freshly prepared cafeteria specialty.',
+      image,
+      stock: 30,
+      rating: 5.0,
+      isAvailable,
+      isSpecial: false
+    };
+    state.menuItems.unshift(newItem);
+    showToast(`Added new dish: ${name}!`);
+  }
+
+  closeVendorDishModal();
+  renderMainContent();
+}
+
+function deleteVendorDish(itemId) {
+  const item = state.menuItems.find(i => i.id === itemId);
+  if (!item) return;
+  
+  state.menuItems = state.menuItems.filter(i => i.id !== itemId);
+  renderMainContent();
+  showToast(`Deleted ${item.name} from cafeteria menu.`);
 }
 
 function advanceOrderStatus(orderId, nextStatus) {

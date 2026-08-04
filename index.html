@@ -334,6 +334,74 @@
     </div>
   </div>
 
+  <!-- Vendor Add / Edit Dish Modal -->
+  <div class="modal-overlay" id="vendor-dish-modal" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:20px;">👨‍🍳</span>
+          <h4 id="vendor-modal-title" style="font-size:16px; font-weight:800; margin:0; color:#fff;">Add New Cafeteria Dish</h4>
+        </div>
+        <button onclick="closeVendorDishModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="vendor-dish-edit-id" value="">
+
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Dish / Item Name:</label>
+          <input type="text" id="vendor-dish-name" placeholder="e.g. Special Asun Fried Rice & Peppered Chicken" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Category:</label>
+            <select id="vendor-dish-category" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:12px; font-weight:600;">
+              <option value="LOCAL_DISHES">🍛 Local Dishes</option>
+              <option value="FAST_FOOD">🍔 Fast Food</option>
+              <option value="HEALTHY_SALADS">🥗 Healthy Choice</option>
+              <option value="BEVERAGES">🥤 Drinks & Beverages</option>
+              <option value="PASTRIES_SNACKS">🍰 Pastries & Snacks</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Prep Time (Mins):</label>
+            <input type="number" id="vendor-dish-prep-time" value="12" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Standard Price (₦):</label>
+            <input type="number" id="vendor-dish-price" placeholder="3000" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Subsidized Price (₦):</label>
+            <input type="number" id="vendor-dish-subsidized-price" placeholder="2000" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Description:</label>
+          <textarea id="vendor-dish-desc" placeholder="Describe the ingredients and preparation..." style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:12px; height:60px; outline:none;"></textarea>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Image URL (optional):</label>
+          <input type="text" id="vendor-dish-image" placeholder="https://images.unsplash.com/..." style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:12px; outline:none;">
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+          <input type="checkbox" id="vendor-dish-available" checked style="width:18px; height:18px;">
+          <label for="vendor-dish-available" style="font-size:13px; font-weight:700; color:var(--slate-800);">Item is Available for Order</label>
+        </div>
+
+        <button onclick="saveVendorDish()" class="btn-add-cart" style="width:100%; padding:12px; justify-content:center; font-size:14px;">
+          💾 Save Dish to Cafeteria Menu
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="app.js"></script>
 </body>
