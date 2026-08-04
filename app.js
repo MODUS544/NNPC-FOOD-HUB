@@ -391,17 +391,6 @@ function renderMainContent() {
     renderAdminView(container);
   }
 }
-    renderOrdersView(container);
-  } else if (state.activeTab === 'favorites') {
-    renderFavoritesView(container);
-  } else if (state.activeTab === 'wallet') {
-    renderWalletView(container);
-  } else if (state.activeTab === 'vendor') {
-    renderVendorView(container);
-  } else if (state.activeTab === 'admin') {
-    renderAdminView(container);
-  }
-}
 
 // ----------------------------------------------------
 // MENU VIEW
