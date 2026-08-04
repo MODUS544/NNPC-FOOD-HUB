@@ -34,6 +34,7 @@
       <div class="role-chip" data-role="INTERN">🎓 Intern</div>
       <div class="role-chip" data-role="CONTRACTOR">💼 Contractor</div>
       <div class="role-chip" data-role="CAFETERIA_VENDOR">👨‍🍳 Vendor Admin</div>
+      <div class="role-chip" data-role="COURIER">🛵 Courier / Driver</div>
       <div class="role-chip" data-role="SUPER_ADMIN">👑 Super Admin</div>
     </div>
   </div>
@@ -397,6 +398,114 @@
 
         <button onclick="saveVendorDish()" class="btn-add-cart" style="width:100%; padding:12px; justify-content:center; font-size:14px;">
           💾 Save Dish to Cafeteria Menu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendor Order Rejection Modal -->
+  <div class="modal-overlay" id="vendor-reject-modal" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header" style="background:var(--nnpc-red);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:20px;">🚫</span>
+          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Reject Workplace Order</h4>
+        </div>
+        <button onclick="closeVendorRejectModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="reject-order-id" value="">
+        <p style="font-size:13px; color:var(--slate-600); margin-bottom:14px;">Select reason for rejecting order:</p>
+        <select id="reject-reason-select" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; font-weight:600; margin-bottom:20px;">
+          <option value="Item Out of Stock / Sold Out">Item Out of Stock / Sold Out</option>
+          <option value="Kitchen Peak Overcapacity / Store Busy">Kitchen Peak Overcapacity / Store Busy</option>
+          <option value="Cafeteria Closing Soon">Cafeteria Closing Soon</option>
+        </select>
+        <button onclick="confirmVendorOrderRejection()" style="width:100%; padding:12px; background:var(--nnpc-red); color:#fff; border:none; border-radius:10px; font-weight:800; cursor:pointer;">
+          Confirm Order Rejection
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable KDS Receipt Modal -->
+  <div class="modal-overlay" id="receipt-modal" style="display:none;">
+    <div class="modal-card" style="max-width:440px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:20px;">🖨️</span>
+          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Kitchen Receipt & Checklist</h4>
+        </div>
+        <button onclick="closeReceiptModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
+      </div>
+      <div class="modal-body" id="printable-receipt-area" style="background:#fff; color:var(--slate-900);">
+        <div style="text-align:center; border-bottom:2px dashed var(--slate-300); padding-bottom:14px; margin-bottom:14px;">
+          <img src="nnpc-logo.svg" alt="NNPC Logo" style="height:32px; margin-bottom:6px;">
+          <h3 style="font-size:16px; font-weight:900;">MEAL POINT WORKPLACE RECEIPT</h3>
+          <div style="font-size:11px; color:var(--slate-500);">NNPC Limited Towers Main Cafeteria</div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px;">
+          <span><strong>Order ID:</strong> <span id="receipt-order-id">ORD-9821</span></span>
+          <span><strong>Date:</strong> <span id="receipt-date">12:05 PM</span></span>
+        </div>
+
+        <div style="background:var(--slate-100); padding:10px; border-radius:8px; margin-bottom:14px; font-size:12px;">
+          <div><strong>Staff:</strong> <span id="receipt-customer-name">Engr. Babatunde Lawal</span></div>
+          <div><strong>Staff ID:</strong> <span id="receipt-staff-id">NNPC/ENG/2021/4892</span></div>
+          <div><strong>Destination:</strong> <span id="receipt-location">NNPC HQ Tower A • Floor 7 • Office 712</span></div>
+          <div style="margin-top:6px; font-size:14px; font-weight:800; color:var(--nnpc-green);">
+            VERIFICATION CODE: <span id="receipt-code-display" class="verification-code-badge" style="font-size:18px; padding:4px 10px;">9821</span>
+          </div>
+        </div>
+
+        <div style="border-bottom:1px solid var(--slate-200); padding-bottom:10px; margin-bottom:10px;">
+          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--slate-500); margin-bottom:6px;">Itemized Checklist:</div>
+          <div id="receipt-items-list" style="font-size:12px;">
+            <!-- Items -->
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:800; margin-bottom:16px;">
+          <span>Total Amount Paid (Subsidy):</span>
+          <span id="receipt-total-amount" style="color:var(--nnpc-green);">₦2,500</span>
+        </div>
+
+        <button onclick="window.print()" class="btn-add-cart" style="width:100%; padding:12px; justify-content:center; font-size:14px;">
+          🖨️ Print Kitchen Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Courier Hand-Off & Proof of Delivery Modal -->
+  <div class="modal-overlay" id="courier-proof-modal" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header" style="background:var(--slate-900);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:20px;">🏁</span>
+          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Confirm Customer Drop-Off</h4>
+        </div>
+        <button onclick="closeCourierProofModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="courier-deliver-order-id" value="">
+        
+        <div style="margin-bottom:16px;">
+          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Option A: Enter Customer 4-Digit Hand-Off Code:</label>
+          <input type="text" id="courier-customer-code" placeholder="e.g. 4892" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--slate-300); font-size:16px; font-weight:800; font-family:monospace; text-align:center; outline:none;">
+        </div>
+
+        <div style="text-align:center; font-size:12px; font-weight:700; color:var(--slate-400); margin:12px 0;">— OR —</div>
+
+        <div style="margin-bottom:20px;">
+          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Option B: Contactless Desk Photo Proof:</label>
+          <button onclick="simulatePhotoUpload()" class="category-pill-btn" style="width:100%; justify-content:center; padding:10px;">📷 Take / Upload Desk Photo</button>
+          <div id="photo-upload-status" style="font-size:11px; color:var(--nnpc-green); font-weight:700; margin-top:6px; display:none;">✅ Photo Proof Attached!</div>
+        </div>
+
+        <button onclick="confirmCourierDelivery()" class="courier-btn-large courier-btn-accept" style="width:100%;">
+          ✅ Complete Delivery & Credit Earnings (+₦1,200)
         </button>
       </div>
     </div>

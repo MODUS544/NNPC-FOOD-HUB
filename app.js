@@ -62,6 +62,22 @@ const MOCK_DATA = {
       avatar: '🛡️',
       role: 'SUPER_ADMIN',
       wallet: { subsidyBalance: 20000, personalBalance: 50000 }
+    },
+    COURIER: {
+      staffId: 'NNPC/LOG/2024/088',
+      name: 'Musa Garba',
+      title: 'Senior Floor Dispatcher & Courier',
+      department: 'Workplace Logistics',
+      building: 'NNPC HQ Logistics Hub',
+      floor: 'Ground Floor',
+      office: 'Dispatch Station 2',
+      avatar: '🛵',
+      role: 'COURIER',
+      vehicle: 'Motorbike #04 (NNPC Express)',
+      rating: 4.95,
+      earningsToday: 18500,
+      completedDeliveriesToday: 14,
+      wallet: { subsidyBalance: 10000, personalBalance: 28500 }
     }
   },
 
@@ -276,6 +292,8 @@ function switchRole(role) {
     switchTab('vendor');
   } else if (role === 'SUPER_ADMIN') {
     switchTab('admin');
+  } else if (role === 'COURIER') {
+    switchTab('courier');
   } else {
     switchTab('menu');
   }
@@ -333,6 +351,14 @@ function renderSidebarNav() {
         Kitchen Orders (KDS)
       </div>
     `;
+  } else if (state.currentRole === 'COURIER') {
+    html = `
+      <div class="nav-section-label">Courier Logistics</div>
+      <div class="nav-item ${state.activeTab === 'courier' ? 'active' : ''}" onclick="switchTab('courier')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Rider Dispatch & Hand-off
+      </div>
+    `;
   } else if (state.currentRole === 'SUPER_ADMIN') {
     html = `
       <div class="nav-section-label">Enterprise Control</div>
@@ -352,6 +378,19 @@ function renderMainContent() {
   if (state.activeTab === 'menu') {
     renderMenuView(container);
   } else if (state.activeTab === 'orders') {
+    renderOrdersView(container);
+  } else if (state.activeTab === 'favorites') {
+    renderFavoritesView(container);
+  } else if (state.activeTab === 'wallet') {
+    renderWalletView(container);
+  } else if (state.activeTab === 'vendor') {
+    renderVendorView(container);
+  } else if (state.activeTab === 'courier') {
+    renderCourierView(container);
+  } else if (state.activeTab === 'admin') {
+    renderAdminView(container);
+  }
+}
     renderOrdersView(container);
   } else if (state.activeTab === 'favorites') {
     renderFavoritesView(container);
@@ -625,13 +664,106 @@ function renderWalletView(container) {
 }
 
 // ----------------------------------------------------
-// VENDOR VIEW (KDS)
+// VENDOR VIEW (KDS & OPERATIONAL DASHBOARD)
 // ----------------------------------------------------
 function renderVendorView(container) {
+  const pendingOrders = state.orders.filter(o => o.status === 'RECEIVED');
+
   container.innerHTML = `
+    <!-- High Priority Flashing Alert Banner for Incoming Orders -->
+    ${pendingOrders.length > 0 ? `
+      <div class="vendor-alert-flashing">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:22px;">🚨</span>
+          <div>
+            <div style="font-size:15px; font-weight:900;">${pendingOrders.length} NEW WORKPLACE ORDER(S) WAITING!</div>
+            <div style="font-size:11px; opacity:0.9;">Accept or Reject within kitchen preparation SLA</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button onclick="toggleAudioAlert()" style="background:rgba(255,255,255,0.2); border:1px solid #fff; color:#fff; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
+            🔔 Sound: ${state.audioAlert ? 'ON' : 'MUTED'}
+          </button>
+        </div>
+      </div>
+    ` : ''}
+
     <div class="section-header">
-      <h2 class="section-title">👨‍🍳 Vendor Dashboard & Menu Management</h2>
+      <h2 class="section-title">👨‍🍳 Kitchen Display System (KDS) - Vendor Dashboard</h2>
       <button onclick="openVendorDishModal()" class="btn-add-cart" style="padding:10px 18px;">➕ Add New Dish / Price</button>
+    </div>
+
+    <!-- Active Kitchen Orders Queue -->
+    <div style="margin-bottom:32px;">
+      <h3 style="font-size:14px; font-weight:800; margin-bottom:14px; color:var(--slate-900);">📦 Incoming & Preparation Orders Queue</h3>
+      
+      ${state.orders.map(order => `
+        <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid var(--slate-200); margin-bottom:16px; box-shadow:var(--card-shadow);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid var(--slate-100); padding-bottom:12px; margin-bottom:14px;">
+            <div>
+              <span class="kds-status-badge kds-status-${order.status}">${order.status}</span>
+              <span style="font-size:16px; font-weight:900; color:var(--slate-900); margin-left:8px;">${order.id} • ${order.customerName}</span>
+              <div style="font-size:12px; color:var(--slate-500); margin-top:2px;">
+                🏢 <strong>Delivery:</strong> ${order.deliveryBuilding} • ${order.deliveryFloor} • ${order.deliveryOffice}
+              </div>
+            </div>
+
+            <!-- Verification Code Display for Kitchen Staff -->
+            <div style="text-align:right;">
+              <div style="font-size:10px; font-weight:800; color:var(--slate-400); text-transform:uppercase;">Pickup Code:</div>
+              <div class="verification-code-badge">${order.qrCode.split('-')[1] || '9821'}</div>
+            </div>
+          </div>
+
+          <!-- Itemized Kitchen Checklist -->
+          <div style="margin-bottom:14px; background:var(--slate-50); padding:12px; border-radius:10px;">
+            <div style="font-size:11px; font-weight:800; color:var(--slate-500); text-transform:uppercase; margin-bottom:6px;">Items to Prepare:</div>
+            ${order.items.map(item => `
+              <div style="font-size:13px; font-weight:700; color:var(--slate-800); display:flex; justify-content:space-between;">
+                <span>• ${item.name} x${item.qty || 1}</span>
+                <span>₦${((item.subsidizedPrice || item.price) * (item.qty || 1)).toLocaleString()}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- KDS Controls (Accept/Reject, Extend Time, Ready, Courier Match, Print Receipt) -->
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; border-top:1px solid var(--slate-100); padding-top:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button onclick="openReceiptModal('${order.id}')" class="category-pill-btn" style="padding:6px 12px; font-size:11px;">🖨️ Print Receipt</button>
+              ${order.status === 'PREPARING' ? `
+                <button onclick="extendPrepTime('${order.id}', 5)" class="category-pill-btn" style="padding:6px 10px; font-size:11px;">+5m Prep</button>
+                <button onclick="extendPrepTime('${order.id}', 10)" class="category-pill-btn" style="padding:6px 10px; font-size:11px;">+10m Prep</button>
+              ` : ''}
+            </div>
+
+            <div style="display:flex; gap:8px;">
+              ${order.status === 'RECEIVED' ? `
+                <button onclick="openVendorRejectModal('${order.id}')" style="background:var(--nnpc-red-light); color:var(--nnpc-red); border:1px solid rgba(217,0,12,0.3); padding:8px 14px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">
+                  Reject Order
+                </button>
+                <button onclick="advanceOrderStatus('${order.id}', 'PREPARING')" class="btn-add-cart" style="padding:8px 16px;">
+                  ✅ Accept Order (Start Cooking)
+                </button>
+              ` : ''}
+
+              ${order.status === 'PREPARING' ? `
+                <button onclick="advanceOrderStatus('${order.id}', 'DRIVER_ASSIGNED')" class="btn-add-cart" style="padding:8px 16px; background:linear-gradient(135deg, var(--nnpc-gold-dark) 0%, var(--nnpc-gold) 100%); color:var(--slate-900);">
+                  🛍️ Mark Bag Sealed & Ready for Courier
+                </button>
+              ` : ''}
+
+              ${order.status === 'DRIVER_ASSIGNED' ? `
+                <div style="font-size:12px; font-weight:800; color:var(--nnpc-green-dark); background:var(--nnpc-green-light); padding:6px 12px; border-radius:8px;">
+                  🛵 Matched: Courier Musa Garba (ETA ~3m)
+                </div>
+                <button onclick="advanceOrderStatus('${order.id}', 'DELIVERED')" class="btn-add-cart" style="padding:8px 14px;">
+                  🤝 Handed to Courier
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `).join('')}
     </div>
 
     <!-- Vendor Menu Items Management Table -->
@@ -686,23 +818,91 @@ function renderVendorView(container) {
         </table>
       </div>
     </div>
+  `;
+}
 
-    <!-- Active Kitchen Orders (KDS) -->
-    <h3 style="font-size:14px; font-weight:800; margin-bottom:12px;">📦 Incoming Workplace Orders</h3>
-    ${state.orders.map(order => `
-      <div style="background:#fff; border-radius:12px; padding:18px; border:1px solid var(--slate-200); margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--card-shadow);">
+// ----------------------------------------------------
+// COURIER / DRIVER VIEW (4TH INTERFACE LOGISTICS SYSTEM)
+// ----------------------------------------------------
+function renderCourierView(container) {
+  const courierObj = MOCK_DATA.users.COURIER;
+
+  container.innerHTML = `
+    <!-- Rider Top Stats Header -->
+    <div style="background:var(--slate-900); color:#fff; border-radius:20px; padding:24px; margin-bottom:28px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--nnpc-gold);">NNPC Express Courier Hub</div>
+        <div style="font-size:24px; font-weight:900; margin-top:2px;">${courierObj.name}</div>
+        <div style="font-size:12px; color:var(--slate-400); margin-top:2px;">🛵 ${courierObj.vehicle} • Rating ⭐ ${courierObj.rating}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px; text-transform:uppercase; color:var(--slate-400);">Today's Earnings</div>
+        <div style="font-size:28px; font-weight:900; color:var(--nnpc-gold);">₦${courierObj.earningsToday.toLocaleString()}</div>
+        <div style="font-size:11px; color:var(--nnpc-green); font-weight:700;">${courierObj.completedDeliveriesToday} Completed Orders</div>
+      </div>
+    </div>
+
+    <!-- Active Courier Dispatch Card -->
+    <div class="section-header">
+      <h2 class="section-title">⚡ Live Dispatch & Order Hand-off</h2>
+    </div>
+
+    <div class="courier-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--slate-100); padding-bottom:14px; margin-bottom:16px;">
         <div>
-          <span class="kds-status-badge kds-status-${order.status}">${order.status}</span>
-          <span style="font-size:14px; font-weight:800; margin-left:10px;">${order.id} • ${order.customerName}</span>
-          <div style="font-size:12px; color:var(--slate-500); margin-top:4px;">${order.deliveryBuilding} • ${order.deliveryFloor} (${order.deliveryOffice})</div>
+          <span style="font-size:11px; font-weight:900; background:var(--nnpc-gold); color:var(--slate-900); padding:4px 10px; border-radius:6px;">NEW DISPATCH ALERT</span>
+          <h3 style="font-size:18px; font-weight:900; color:var(--slate-900); margin-top:6px;">Order #ORD-9821</h3>
         </div>
-        <div style="display:flex; gap:8px;">
-          ${order.status === 'RECEIVED' ? `<button onclick="advanceOrderStatus('${order.id}', 'PREPARING')" class="btn-add-cart">Start Cooking 👨‍🍳</button>` : ''}
-          ${order.status === 'PREPARING' ? `<button onclick="advanceOrderStatus('${order.id}', 'DRIVER_ASSIGNED')" class="btn-add-cart">Assign Driver 🛵</button>` : ''}
-          ${order.status === 'DRIVER_ASSIGNED' ? `<button onclick="advanceOrderStatus('${order.id}', 'DELIVERED')" class="btn-add-cart">Mark Delivered 🏁</button>` : ''}
+        <div style="text-align:right;">
+          <div style="font-size:20px; font-weight:900; color:var(--nnpc-green);">₦1,200 Fee</div>
+          <div style="font-size:11px; color:var(--slate-500);">Est. Transit: ~8 Mins</div>
         </div>
       </div>
-    `).join('')}
+
+      <!-- Pickup & Drop-Off Routing Details -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+        <div style="background:var(--slate-50); padding:14px; border-radius:12px; border:1px solid var(--slate-200);">
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:var(--slate-500);">1. Merchant Pickup:</div>
+          <div style="font-size:13px; font-weight:800; color:var(--slate-900); margin-top:2px;">NNPC Towers Main Cafeteria</div>
+          <div style="font-size:11px; color:var(--slate-500);">Ground Floor, Block A • Counter 2</div>
+          <div style="margin-top:8px;">
+            <span style="font-size:10px; font-weight:800; color:var(--slate-400);">PRESENCE CODE:</span>
+            <span class="verification-code-badge" style="font-size:16px; padding:2px 8px; margin-left:4px;">9821</span>
+          </div>
+        </div>
+
+        <div style="background:var(--nnpc-green-light); padding:14px; border-radius:12px; border:1px solid rgba(0,102,51,0.2);">
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:var(--nnpc-green-dark);">2. Customer Hand-off:</div>
+          <div style="font-size:13px; font-weight:800; color:var(--nnpc-green-dark); margin-top:2px;">Engr. Babatunde Lawal</div>
+          <div style="font-size:12px; font-weight:800; color:var(--slate-900);">NNPC HQ Tower A • Floor 7 • Office 712</div>
+          <div style="font-size:11px; color:var(--slate-500); margin-top:4px;">📝 Note: "Leave on workstation desk 712"</div>
+        </div>
+      </div>
+
+      <!-- Itemized Courier Verification Checklist -->
+      <div style="margin-bottom:20px; background:#fff; border:1px solid var(--slate-200); padding:14px; border-radius:12px;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--slate-500); margin-bottom:8px;">Pickup Checklist Verification:</div>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; margin-bottom:6px;">
+          <input type="checkbox" checked style="width:16px; height:16px;"> NNPC Special Jollof Rice Combo (x1)
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; margin-bottom:6px;">
+          <input type="checkbox" checked style="width:16px; height:16px;"> Classic NNPC Meat Pie & Ice-Cold Maltina (x1)
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700;">
+          <input type="checkbox" checked style="width:16px; height:16px;"> Sealed Thermal Bag & Cutlery Pack
+        </label>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:grid; grid-template-columns:1fr 2fr; gap:12px;">
+        <button onclick="showToast('Dispatch job declined.')" class="courier-btn-large courier-btn-decline">
+          Decline Job (24s)
+        </button>
+        <button onclick="openCourierProofModal('ORD-9821')" class="courier-btn-large courier-btn-accept">
+          🛵 Arrived at Office Floor / Confirm Drop-Off
+        </button>
+      </div>
+    </div>
   `;
 }
 
@@ -1082,6 +1282,95 @@ function confirmWalletTopup() {
   closeWalletTopupModal();
   renderMainContent();
   showToast(`Successfully added ₦${amt.toLocaleString()} to Personal Wallet!`);
+}
+
+// Vendor Audio Alert Toggle
+function toggleAudioAlert() {
+  state.audioAlert = !state.audioAlert;
+  renderMainContent();
+  showToast(`Audio alerts ${state.audioAlert ? 'ENABLED 🔔' : 'MUTED 🔕'}`);
+}
+
+// Vendor Reject Order
+function openVendorRejectModal(orderId) {
+  document.getElementById('reject-order-id').value = orderId;
+  document.getElementById('vendor-reject-modal').style.display = 'flex';
+}
+function closeVendorRejectModal() {
+  document.getElementById('vendor-reject-modal').style.display = 'none';
+}
+function confirmVendorOrderRejection() {
+  const orderId = document.getElementById('reject-order-id').value;
+  const reason = document.getElementById('reject-reason-select').value;
+  state.orders = state.orders.filter(o => o.id !== orderId);
+  closeVendorRejectModal();
+  renderMainContent();
+  showToast(`Order ${orderId} rejected. Reason: ${reason}`);
+}
+
+// Printable KDS Receipt Modal
+function openReceiptModal(orderId) {
+  const order = state.orders.find(o => o.id === orderId);
+  if (order) {
+    document.getElementById('receipt-order-id').innerText = order.id;
+    document.getElementById('receipt-date').innerText = order.timestamp;
+    document.getElementById('receipt-customer-name').innerText = order.customerName;
+    document.getElementById('receipt-staff-id').innerText = order.staffId || 'NNPC/ENG/2021/4892';
+    document.getElementById('receipt-location').innerText = `${order.deliveryBuilding} • ${order.deliveryFloor} • ${order.deliveryOffice}`;
+    document.getElementById('receipt-code-display').innerText = order.qrCode ? order.qrCode.split('-')[1] : '9821';
+    document.getElementById('receipt-total-amount').innerText = `₦${order.total.toLocaleString()}`;
+
+    const itemsContainer = document.getElementById('receipt-items-list');
+    itemsContainer.innerHTML = order.items.map(i => `
+      <div style="display:flex; justify-content:space-between; padding:4px 0;">
+        <span>[x] ${i.name} (x${i.qty || 1})</span>
+        <span>₦${((i.subsidizedPrice || i.price) * (i.qty || 1)).toLocaleString()}</span>
+      </div>
+    `).join('');
+  }
+  document.getElementById('receipt-modal').style.display = 'flex';
+}
+function closeReceiptModal() {
+  document.getElementById('receipt-modal').style.display = 'none';
+}
+
+// Extend Prep Time
+function extendPrepTime(orderId, mins) {
+  const order = state.orders.find(o => o.id === orderId);
+  if (order) {
+    order.prepTimeRemaining = (order.prepTimeRemaining || 10) + mins;
+    renderMainContent();
+    showToast(`Extended preparation time by +${mins} minutes for Order ${orderId}`);
+  }
+}
+
+// Courier Proof Modal Handlers
+function openCourierProofModal(orderId) {
+  document.getElementById('courier-deliver-order-id').value = orderId;
+  document.getElementById('courier-customer-code').value = '';
+  document.getElementById('photo-upload-status').style.display = 'none';
+  document.getElementById('courier-proof-modal').style.display = 'flex';
+}
+function closeCourierProofModal() {
+  document.getElementById('courier-proof-modal').style.display = 'none';
+}
+function simulatePhotoUpload() {
+  document.getElementById('photo-upload-status').style.display = 'block';
+  showToast('Desk Photo Proof Uploaded!');
+}
+function confirmCourierDelivery() {
+  const orderId = document.getElementById('courier-deliver-order-id').value;
+  const order = state.orders.find(o => o.id === orderId || o.id === 'ORD-9821');
+  if (order) {
+    order.status = 'DELIVERED';
+  }
+  
+  MOCK_DATA.users.COURIER.earningsToday += 1200;
+  MOCK_DATA.users.COURIER.completedDeliveriesToday += 1;
+  
+  closeCourierProofModal();
+  renderMainContent();
+  showToast('Order delivered successfully! ₦1,200 credited to courier earnings.');
 }
 
 // Helper Toast Alert
