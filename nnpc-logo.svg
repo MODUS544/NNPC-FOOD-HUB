@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 250" width="450" height="250">
+  <!-- Left Yellow Polygon -->
+  <polygon points="0,45 55,55 55,160 0,200" fill="#E5C200"/>
+
+  <!-- Top Dark Green Polygon -->
+  <polygon points="55,0 210,45 55,160" fill="#1B6943"/>
+
+  <!-- Right Light Green Polygon -->
+  <polygon points="55,160 210,45 210,195" fill="#00B050"/>
+
+  <!-- Bottom Red Polygon -->
+  <polygon points="55,160 155,182 160,250 0,200" fill="#D9000C"/>
+
+  <!-- NNPC Text -->
+  <text x="222" y="194" font-family="'Outfit', 'Plus Jakarta Sans', 'Montserrat', 'Helvetica Neue', sans-serif" font-size="110" font-weight="800" fill="#58595B" letter-spacing="-2">NNPC</text>
+</svg>

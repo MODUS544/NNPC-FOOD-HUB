@@ -107,18 +107,28 @@ body {
 }
 
 .brand-logo-badge {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, var(--nnpc-green) 0%, var(--nnpc-green-dark) 100%);
+  min-width: 48px;
+  height: 48px;
+  background: #ffffff;
   border: 2px solid var(--nnpc-gold);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  font-weight: 800;
-  font-size: 20px;
+  padding: 5px 8px;
   box-shadow: 0 4px 12px var(--nnpc-green-glow);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.brand-logo-badge:hover {
+  transform: scale(1.05);
+}
+
+.nnpc-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .brand-text h1 {

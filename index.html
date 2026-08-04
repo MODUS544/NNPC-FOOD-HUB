@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meal Point | NNPC Limited Workplace Food Ordering Platform</title>
   
+  <!-- Favicon -->
+  <link rel="icon" href="nnpc-logo.svg" type="image/svg+xml">
+  
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +41,9 @@
   <!-- Top Corporate Header -->
   <header class="top-header">
     <a href="#" class="brand-container">
-      <div class="brand-logo-badge">NNPC</div>
+      <div class="brand-logo-badge">
+        <img src="nnpc-logo.svg" alt="NNPC Logo" class="nnpc-logo-img" onerror="this.onerror=null; this.src='nnpc-logo.png';">
+      </div>
       <div class="brand-text">
         <h1>Meal Point</h1>
         <p>NNPC Limited Workplace Food Platform</p>
@@ -97,9 +102,12 @@
         <!-- Injected via app.js -->
       </div>
 
-      <div style="padding:14px; background:var(--nnpc-green-light); border-radius:12px; border:1px solid rgba(0,102,51,0.15); margin-top:20px;">
-        <div style="font-size:11px; font-weight:700; color:var(--nnpc-green-dark);">Meal Point Platform</div>
-        <div style="font-size:10px; color:var(--slate-500); margin-top:2px;">Internal NNPC Limited Edition v4.0</div>
+      <div style="padding:12px 14px; background:var(--nnpc-green-light); border-radius:12px; border:1px solid rgba(0,102,51,0.15); margin-top:20px; display:flex; align-items:center; gap:10px;">
+        <img src="nnpc-logo.svg" alt="NNPC Logo" class="nnpc-logo-sm" onerror="this.onerror=null; this.src='nnpc-logo.png';" style="width:32px; height:32px; object-fit:contain; background:#fff; padding:2px; border-radius:6px; border:1px solid var(--nnpc-gold);">
+        <div>
+          <div style="font-size:11px; font-weight:700; color:var(--nnpc-green-dark);">Meal Point Platform</div>
+          <div style="font-size:10px; color:var(--slate-500); margin-top:2px;">NNPC Limited • Internal Edition</div>
+        </div>
       </div>
     </aside>
 
@@ -111,8 +119,11 @@
 
   <!-- Cart Drawer -->
   <div class="cart-drawer" id="cart-drawer">
-    <div style="padding:20px; background:var(--nnpc-green); color:#fff; display:flex; align-items:center; justify-content:space-between;">
-      <h3 style="font-size:16px; font-weight:800;">🛒 Meal Point Cart & Checkout</h3>
+    <div style="padding:16px 20px; background:var(--nnpc-green); color:#fff; display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <img src="nnpc-logo.svg" alt="NNPC Logo" onerror="this.onerror=null; this.src='nnpc-logo.png';" style="width:30px; height:30px; object-fit:contain; background:#fff; padding:2px; border-radius:6px; border:1px solid var(--nnpc-gold);">
+        <h3 style="font-size:16px; font-weight:800; color:#fff; margin:0;">🛒 Meal Point Cart & Checkout</h3>
+      </div>
       <button onclick="toggleCartDrawer()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
     </div>
 
@@ -143,10 +154,10 @@
   <!-- AI Assistant Modal -->
   <div class="ai-modal" id="ai-chat-modal" style="display:none;">
     <div class="ai-modal-header">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span style="font-size:20px;">🤖</span>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <img src="nnpc-logo.svg" alt="NNPC Logo" onerror="this.onerror=null; this.src='nnpc-logo.png';" style="width:30px; height:30px; object-fit:contain; background:#fff; padding:2px; border-radius:6px; border:1px solid var(--nnpc-gold);">
         <div>
-          <h4 style="font-size:14px; font-weight:800;">Chef NNPC AI Assistant</h4>
+          <h4 style="font-size:14px; font-weight:800; margin:0; color:#fff;">Chef NNPC AI Assistant</h4>
           <span style="font-size:10px; color:var(--nnpc-gold);">Meal Point Food Companion</span>
         </div>
       </div>
