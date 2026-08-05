@@ -3,515 +3,299 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meal Point | NNPC Limited Workplace Food Ordering Platform</title>
-  
-  <!-- Favicon -->
-  <link rel="icon" href="nnpc-logo.svg" type="image/svg+xml">
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Custom CSS -->
+  <title>City Star Super-App Platform & AI Orchestration Engine</title>
+  <meta name="description" content="Central AI Orchestration & Logistics Engine powering food delivery, room service, hotel reservations, and recreation access across City Star Maiduguri and Gombe branches.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Top Announcement Bar -->
-  <div class="announcement-bar">
-    <span>🔔 <strong>Meal Point Notice:</strong> Kitchen pre-ordering for lunch delivery across NNPC Towers A, B & C is live! Place orders before 12:15 PM.</span>
-  </div>
-
-  <!-- Role Switcher Banner (RBAC Test Bench) -->
-  <div class="role-switcher-banner">
-    <div style="display:flex; align-items:center; gap:8px; font-weight:600;">
-      <span>🛡️ MEAL POINT ROLE SWITCHER:</span>
-      <span style="font-size:11px; opacity:0.85;">(Switch perspectives to test Employee, Intern, Contractor, Vendor, and Super Admin features)</span>
-    </div>
-    <div class="role-chips">
-      <div class="role-chip active" data-role="EMPLOYEE">👨‍💼 Staff</div>
-      <div class="role-chip" data-role="INTERN">🎓 Intern</div>
-      <div class="role-chip" data-role="CONTRACTOR">💼 Contractor</div>
-      <div class="role-chip" data-role="CAFETERIA_VENDOR">👨‍🍳 Vendor Admin</div>
-      <div class="role-chip" data-role="COURIER">🛵 Courier / Driver</div>
-      <div class="role-chip" data-role="SUPER_ADMIN">👑 Super Admin</div>
-    </div>
-  </div>
-
-  <!-- Top Header Navigation -->
-  <header class="top-header">
-    <!-- Brand Logo & Title -->
-    <a href="#" class="brand-container">
-      <div class="brand-logo-badge">
-        <img src="nnpc-logo.svg" alt="NNPC Logo" class="nnpc-logo-img">
-      </div>
-      <div class="brand-text">
-        <h1>Meal Point</h1>
-        <p>NNPC Workplace Food Platform</p>
-      </div>
-    </a>
-
-    <!-- Delivery Location Selector Pill -->
-    <div class="delivery-picker-pill" onclick="openLocationModal()">
-      <span style="font-size:16px;">📍</span>
+  <!-- Top App Navigation & Header Bar -->
+  <header class="app-header">
+    <div class="brand-container">
+      <img src="https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=100030783744713" alt="City Star Logo" class="brand-logo-img" onerror="this.src='https://via.placeholder.com/44/D4AF37/000?text=CS'">
       <div>
-        <div style="font-size:9px; font-weight:700; text-transform:uppercase; color:var(--nnpc-green-dark);">Office Delivery Location</div>
-        <div id="delivery-pill-text" style="font-size:12px; font-weight:800; color:var(--slate-900);">NNPC HQ Tower A • Floor 7 • IT • Office 712</div>
+        <div class="brand-title" id="appBrandTitle">City Star Restaurant & Accommodation</div>
+        <div class="brand-subtitle">AI Orchestration & Logistics Engine</div>
       </div>
-      <span style="font-size:10px; color:var(--slate-400);">✏️</span>
     </div>
 
-    <!-- Header Actions (Wallet, Notifications, Cart, User Profile) -->
-    <div style="display:flex; align-items:center; gap:16px;">
-      <!-- Wallet Quick Pill -->
-      <div onclick="switchTab('wallet')" style="display:flex; align-items:center; gap:8px; background:var(--nnpc-green-light); border:1px solid rgba(0,102,51,0.2); padding:6px 14px; border-radius:20px; cursor:pointer;" title="Click to view wallet details">
-        <span style="font-size:14px;">💳</span>
-        <div>
-          <div style="font-size:9px; font-weight:700; text-transform:uppercase; color:var(--nnpc-green-dark);">Subsidy Wallet</div>
-          <div id="header-wallet-balance" style="font-size:13px; font-weight:800; color:var(--nnpc-green-dark);">₦14,500</div>
-        </div>
+    <!-- Role Switcher Bar -->
+    <div class="role-tabs">
+      <button class="role-btn active" data-role="user">
+        <span>📱</span> User Super-App
+      </button>
+      <button class="role-btn" data-role="merchant">
+        <span>👨‍🍳</span> Merchant & Facility KDS
+      </button>
+      <button class="role-btn" data-role="courier">
+        <span>🛵</span> Dispatch & Room Service
+      </button>
+      <button class="role-btn" data-role="admin">
+        <span>📊</span> Super Admin Console
+      </button>
+    </div>
+
+    <!-- Branch Switcher, User Wallet & Loyalty Points -->
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="branch-control">
+        <span style="font-size: 14px;">📍</span>
+        <select id="branchSelector" class="branch-select">
+          <option value="maiduguri">City Star Maiduguri</option>
+          <option value="gombe">City Star Gombe</option>
+        </select>
       </div>
 
-      <!-- Notifications Bell Icon -->
-      <div onclick="toggleNotificationsDrawer()" style="position:relative; cursor:pointer; width:40px; height:40px; border-radius:12px; background:#FFFFFF; border:1px solid var(--slate-200); display:flex; align-items:center; justify-content:center;" title="Notifications">
-        <span style="font-size:18px;">🔔</span>
-        <span id="notif-badge-count" style="position:absolute; top:-4px; right:-4px; background:var(--nnpc-red); color:#fff; font-size:10px; font-weight:800; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #fff;">3</span>
+      <div style="background: rgba(255,255,255,0.06); padding: 6px 14px; border-radius: 9999px; border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 14px;">💳</span>
+        <span style="font-size: 12px; color: var(--text-muted);">Wallet:</span>
+        <span id="userWalletDisplay" style="font-weight: 700; color: var(--gold-light); font-family: var(--font-heading);">₦48,500</span>
       </div>
 
-      <!-- Cart Button -->
-      <div onclick="toggleCartDrawer()" style="position:relative; cursor:pointer; width:40px; height:40px; border-radius:12px; background:#FFFFFF; border:1px solid var(--slate-200); display:flex; align-items:center; justify-content:center;" title="Cart">
-        <span style="font-size:18px;">🛒</span>
-        <span id="cart-badge-count" style="position:absolute; top:-4px; right:-4px; background:var(--nnpc-gold-dark); color:var(--slate-900); font-size:10px; font-weight:800; width:18px; height:18px; border-radius:50%; display:none; align-items:center; justify-content:center; border:2px solid #fff;">0</span>
-      </div>
-
-      <!-- User Profile Badge -->
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div id="header-user-avatar" style="width:38px; height:38px; border-radius:10px; background:var(--nnpc-green); display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; border:1px solid var(--nnpc-gold);">👨‍💼</div>
-        <div style="line-height:1.2;">
-          <div id="header-user-name" style="font-size:13px; font-weight:700; color:var(--slate-900);">Engr. Babatunde Lawal</div>
-          <div id="header-user-title" style="font-size:11px; color:var(--slate-500);">Senior Petroleum Engineer • Upstream</div>
-        </div>
+      <div style="background: rgba(245, 158, 11, 0.12); padding: 6px 14px; border-radius: 9999px; border: 1px solid rgba(245, 158, 11, 0.4); display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 14px;">⭐</span>
+        <span id="userPointsDisplay" style="font-weight: 700; color: #FBBF24; font-family: var(--font-heading);">500 PTS</span>
       </div>
     </div>
   </header>
 
-  <!-- App Layout -->
-  <div class="app-container">
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-      <div id="sidebar-nav">
-        <!-- Dynamic sidebar menu injected via app.js -->
+  <!-- Main View Area -->
+  <main class="main-content">
+
+    <!-- ==================== PORTAL 1: USER SUPER-APP ==================== -->
+    <section id="portal-user" class="portal-view active">
+      <!-- 4-Screen Mobile Operational Navigation Bar -->
+      <div class="app-tabs">
+        <button class="app-tab-btn active" data-usertab="hub">
+          <span>🏠</span> Screen A: City Star Hub
+        </button>
+        <button class="app-tab-btn" data-usertab="eat">
+          <span>🍔</span> Screen B: EAT (Food & Room Service)
+        </button>
+        <button class="app-tab-btn" data-usertab="stay">
+          <span>🏨</span> Screen C: STAY (Hotel Booking)
+        </button>
+        <button class="app-tab-btn" data-usertab="pass">
+          <span>🎟️</span> Screen D: City Star Pass & Account
+        </button>
       </div>
 
-      <!-- Footer Platform Info Badge -->
-      <div style="padding:12px 14px; background:var(--nnpc-green-light); border-radius:12px; border:1px solid rgba(0,102,51,0.15); margin-top:20px; display:flex; align-items:center; gap:10px;">
-        <img src="nnpc-logo.svg" alt="NNPC Logo" style="width:32px; height:32px; object-fit:contain; background:#fff; padding:2px; border-radius:6px; border:1px solid var(--nnpc-gold);">
+      <div class="split-layout">
+        <!-- Main Content Area -->
+        <div id="userMainContent">
+          <!-- Dynamic Content rendered via app.js -->
+        </div>
+
+        <!-- Right Side Panel: Active Tracking / Cart / Dynamic QR -->
+        <aside class="side-panel">
+          <h3 style="font-family: var(--font-heading); color: var(--gold-light); margin-bottom: 12px; font-size: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+            ⚡ Real-Time Live Activity
+          </h3>
+
+          <div id="sidePanelContent">
+            <!-- Dynamic Side Panel Content -->
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ==================== PORTAL 2: MERCHANT & FACILITY DASHBOARD ==================== -->
+    <section id="portal-merchant" class="portal-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-heading); font-size: 22px;">👨‍🍳 Merchant & Facility KDS Terminal</h2>
+        
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary" id="kdsTabKitchen" style="width: auto; padding: 8px 16px;">Kitchen KDS Tickets</button>
+          <button class="btn-secondary" id="kdsTabLedger" style="width: auto; padding: 8px 16px;">Front Desk Ledger</button>
+          <button class="btn-secondary" id="kdsTabScanner" style="width: auto; padding: 8px 16px;">Gym & Pool Scanner</button>
+        </div>
+      </div>
+
+      <!-- Merchant Sub-View Container -->
+      <div id="merchantMainContent">
+        <!-- Rendered via app.js -->
+      </div>
+    </section>
+
+    <!-- ==================== PORTAL 3: COURIER & ROOM SERVICE DISPATCH ==================== -->
+    <section id="portal-courier" class="portal-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-heading); font-size: 22px;">🛵 Courier & House Staff Dispatch Console</h2>
+        <span class="badge-gold">Jarvis Auto-Dispatch Active</span>
+      </div>
+
+      <div class="split-layout">
         <div>
-          <div style="font-size:11px; font-weight:800; color:var(--nnpc-green-dark);">Meal Point Platform</div>
-          <div style="font-size:10px; color:var(--slate-500); margin-top:2px;">NNPC Limited • Internal Edition v4.0</div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Main Viewport Area -->
-    <main class="main-content" id="main-container">
-      <!-- Dynamic Views injected via app.js -->
-    </main>
-  </div>
-
-  <!-- Slide-Out Notifications Drawer -->
-  <div class="notifications-drawer" id="notifications-drawer">
-    <div style="padding:18px 20px; background:var(--nnpc-green); color:#fff; display:flex; align-items:center; justify-content:space-between;">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span style="font-size:18px;">🔔</span>
-        <h3 style="font-size:15px; font-weight:800; color:#fff; margin:0;">Notifications</h3>
-      </div>
-      <button onclick="toggleNotificationsDrawer()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-    </div>
-    <div id="notifications-list" style="flex:1; overflow-y:auto;">
-      <!-- Dynamic notifications -->
-    </div>
-  </div>
-
-  <!-- Cart & Checkout Drawer -->
-  <div class="cart-drawer" id="cart-drawer" style="position:fixed; top:0; right:-420px; width:400px; height:100vh; background:#fff; z-index:300; box-shadow:-10px 0 30px rgba(0,0,0,0.1); transition:right 0.3s cubic-bezier(0.16, 1, 0.3, 1); display:flex; flex-direction:column;">
-    <div style="padding:18px 20px; background:var(--nnpc-green); color:#fff; display:flex; align-items:center; justify-content:space-between;">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <img src="nnpc-logo.svg" alt="NNPC Logo" style="width:28px; height:28px; object-fit:contain; background:#fff; padding:2px; border-radius:6px; border:1px solid var(--nnpc-gold);">
-        <h3 style="font-size:16px; font-weight:800; color:#fff; margin:0;">🛒 Cart & Checkout</h3>
-      </div>
-      <button onclick="toggleCartDrawer()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-    </div>
-
-    <!-- Cart Items List -->
-    <div id="cart-items-container" style="flex:1; padding:20px; overflow-y:auto;">
-      <!-- Dynamic items -->
-    </div>
-
-    <!-- Cart Footer & Checkout Controls -->
-    <div id="cart-footer" style="padding:20px; border-top:1px solid var(--slate-200); background:var(--slate-50);">
-      <!-- Delivery Location Summary -->
-      <div style="margin-bottom:12px; padding:10px; background:#fff; border-radius:10px; border:1px solid var(--slate-200);">
-        <div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--slate-500);">Office Delivery Location:</div>
-        <div id="checkout-delivery-location" style="font-size:12px; font-weight:800; color:var(--nnpc-green); margin-top:2px;">NNPC HQ Tower A • Floor 7 • Office 712</div>
-      </div>
-
-      <!-- Fulfillment Option Switcher -->
-      <div style="margin-bottom:14px;">
-        <label style="font-size:11px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Fulfillment Method:</label>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <button id="fulfillment-delivery-btn" onclick="setFulfillment('DELIVERY')" class="category-pill-btn active" style="padding:8px 10px; justify-content:center; font-size:11px;">🏢 Office Delivery</button>
-          <button id="fulfillment-pickup-btn" onclick="setFulfillment('PICKUP')" class="category-pill-btn" style="padding:8px 10px; justify-content:center; font-size:11px;">📦 QR Express Pickup</button>
-        </div>
-      </div>
-
-      <!-- Meal Scheduling Pre-Order Selector -->
-      <div style="margin-bottom:16px;">
-        <label style="font-size:11px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Delivery Time:</label>
-        <select id="checkout-schedule-time" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--slate-300); font-size:12px; font-weight:600; background:#fff; outline:none;">
-          <option value="IMMEDIATE">⚡ Immediate Delivery (~12-15 Mins)</option>
-          <option value="12:15 PM">🕒 Pre-Order for 12:15 PM Lunch Break</option>
-          <option value="12:30 PM">🕒 Pre-Order for 12:30 PM Lunch Break</option>
-          <option value="01:00 PM">🕒 Pre-Order for 01:00 PM Lunch Break</option>
-          <option value="01:30 PM">🕒 Pre-Order for 01:30 PM Lunch Break</option>
-        </select>
-      </div>
-
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-        <span style="font-size:14px; font-weight:700;">Subtotal:</span>
-        <span id="cart-subtotal" style="font-size:20px; font-weight:800; color:var(--nnpc-green);">₦0</span>
-      </div>
-
-      <button onclick="checkoutOrder()" class="btn-add-cart" style="width:100%; padding:14px; justify-content:center; font-size:15px; background:linear-gradient(135deg, var(--nnpc-green) 0%, var(--nnpc-green-dark) 100%);">
-        ✅ Confirm & Place Order
-      </button>
-    </div>
-  </div>
-
-  <!-- Office Delivery Location Picker Modal -->
-  <div class="modal-overlay" id="location-modal" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:20px;">📍</span>
-          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Select Office Delivery Destination</h4>
-        </div>
-        <button onclick="closeLocationModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-      </div>
-      <div class="modal-body">
-        <div style="margin-bottom:16px;">
-          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">NNPC Building / Complex:</label>
-          <select id="modal-building-select" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; font-weight:600;">
-            <option value="NNPC HQ Tower A">NNPC HQ Tower A (Abuja)</option>
-            <option value="NNPC HQ Tower B">NNPC HQ Tower B (Abuja)</option>
-            <option value="Executive Wing Tower C">Executive Wing Tower C (Abuja)</option>
-            <option value="Refinery Staff Pavilion">Port Harcourt Refinery Staff Pavilion</option>
-          </select>
+          <h3 style="font-family: var(--font-heading); font-size: 16px; margin-bottom: 14px; color: var(--text-gold);">
+            Active Deliveries & Room Service Tasks
+          </h3>
+          <div id="courierOrdersGrid" class="kds-grid">
+            <!-- Rendered via app.js -->
+          </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
-          <div>
-            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Floor Number:</label>
-            <select id="modal-floor-select" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; font-weight:600;">
-              <option value="Ground Floor">Ground Floor</option>
-              <option value="Floor 1">Floor 1</option>
-              <option value="Floor 2">Floor 2</option>
-              <option value="Floor 3">Floor 3</option>
-              <option value="Floor 4">Floor 4</option>
-              <option value="Floor 5">Floor 5</option>
-              <option value="Floor 6">Floor 6</option>
-              <option value="Floor 7" selected>Floor 7</option>
-              <option value="Floor 8">Floor 8</option>
-              <option value="Floor 9">Floor 9</option>
-              <option value="Floor 10">Floor 10</option>
-              <option value="Floor 11">Floor 11</option>
-              <option value="Floor 12">Floor 12</option>
+        <aside class="side-panel">
+          <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--gold-light); margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+            🔐 Verification Code Terminal
+          </h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Enter 4-digit verification code provided by kitchen or guest to complete delivery.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Select Order</label>
+            <select id="verificationOrderSelect" class="form-input">
+              <option value="">-- Choose Order --</option>
             </select>
           </div>
-          <div>
-            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Department:</label>
-            <select id="modal-dept-select" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; font-weight:600;">
-              <option value="IT & Digital Transformation">IT & Digital</option>
-              <option value="Upstream Operations" selected>Upstream Operations</option>
-              <option value="Reservoir Engineering">Reservoir Engineering</option>
-              <option value="Finance & Accounting">Finance & Accounting</option>
-              <option value="Legal & Regulatory">Legal & Regulatory</option>
-            </select>
+
+          <div class="form-group">
+            <label class="form-label">4-Digit Security Code</label>
+            <input type="text" id="verificationCodeInput" class="form-input" placeholder="e.g. 8492" maxlength="4" style="font-size: 18px; letter-spacing: 4px; font-weight: 700; text-align: center;">
+            
+            <!-- Courier Touchscreen PIN Keypad -->
+            <div class="keypad-grid" id="runnerKeypad">
+              <button type="button" class="keypad-btn" data-key="1">1</button>
+              <button type="button" class="keypad-btn" data-key="2">2</button>
+              <button type="button" class="keypad-btn" data-key="3">3</button>
+              <button type="button" class="keypad-btn" data-key="4">4</button>
+              <button type="button" class="keypad-btn" data-key="5">5</button>
+              <button type="button" class="keypad-btn" data-key="6">6</button>
+              <button type="button" class="keypad-btn" data-key="7">7</button>
+              <button type="button" class="keypad-btn" data-key="8">8</button>
+              <button type="button" class="keypad-btn" data-key="9">9</button>
+              <button type="button" class="keypad-btn" data-key="CLR" style="color:var(--color-danger); font-size:12px;">CLR</button>
+              <button type="button" class="keypad-btn" data-key="0">0</button>
+              <button type="button" class="keypad-btn" data-key="DEL" style="font-size:14px;">⌫</button>
+            </div>
+          </div>
+
+          <button id="btnVerifyCode" class="btn-primary" style="margin-top: 10px;">
+            ✓ Verify Code & Deliver
+          </button>
+          
+          <div id="verificationResultMsg" style="margin-top: 12px; text-align: center; font-size: 13px; font-weight: 600;"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ==================== PORTAL 4: SUPER ADMIN CONSOLE ==================== -->
+    <section id="portal-admin" class="portal-view">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-family: var(--font-heading); font-size: 24px;">📊 Super Admin Executive Oversight Console</h2>
+          <p style="font-size: 13px; color: var(--text-muted);">Multi-branch analytics, SLA breach alerts & inventory isolation controls.</p>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <label style="font-size: 13px; font-weight: 600; color: var(--gold-light); display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="chkEnforceIsolation" checked style="accent-color: var(--gold-primary);">
+            Enforce Strict Branch Isolation
+          </label>
+        </div>
+      </div>
+
+      <!-- Executive Overview Widgets -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Total Revenue (Today)</div>
+          <div id="statTotalRevenue" class="stat-value">₦348,500</div>
+          <div style="font-size: 11px; color: var(--color-success); margin-top: 4px;">↑ +18.4% vs yesterday</div>
+        </div>
+
+        <div class="stat-card">
+          <div style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Active Food Deliveries</div>
+          <div id="statActiveDeliveries" class="stat-value">4 Orders</div>
+          <div style="font-size: 11px; color: var(--gold-light); margin-top: 4px;">Modes A & B Live</div>
+        </div>
+
+        <div class="stat-card">
+          <div style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Hotel Room Occupancy</div>
+          <div id="statRoomOccupancy" class="stat-value">75%</div>
+          <div style="font-size: 11px; color: var(--color-info); margin-top: 4px;">Maiduguri & Gombe</div>
+        </div>
+
+        <div class="stat-card">
+          <div style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">SLA Prep Breaches</div>
+          <div id="statSLABreaches" class="stat-value" style="color: var(--color-danger);">0 Breaches</div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Kitchen prep &gt; 5m over target</div>
+        </div>
+      </div>
+
+      <!-- SLA Alert Banner Container -->
+      <div id="slaAlertBannerContainer" style="margin-bottom: 20px;"></div>
+
+      <div class="split-layout">
+        <!-- Live System Logs & Orders Table -->
+        <div>
+          <h3 style="font-family: var(--font-heading); font-size: 16px; margin-bottom: 12px; color: var(--text-gold);">
+            Live Platform Audit Ledger
+          </h3>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow-x: auto;">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Order / Ref ID</th>
+                  <th>Branch</th>
+                  <th>Mode / Type</th>
+                  <th>Customer / Room</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminOrdersTableBody">
+                <!-- Rendered via app.js -->
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <div style="margin-bottom:20px;">
-          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Office / Workstation Number:</label>
-          <input type="text" id="modal-desk-input" value="Office 712" placeholder="e.g. Office 604 or Desk 712" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
-        </div>
+        <!-- Inventory Control & Out-of-Stock Management -->
+        <aside class="side-panel">
+          <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--gold-light); margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+            ⚠️ Inventory Out-of-Stock Control
+          </h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+            Toggle item availability to simulate Kitchen out-of-stock and test automated 3-way customer response.
+          </p>
 
-        <button onclick="saveLocationSelection()" class="btn-add-cart" style="width:100%; padding:12px; justify-content:center; font-size:14px;">
-          Save Destination & Continue
+          <div id="adminInventoryList" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Rendered via app.js -->
+          </div>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== 3-WAY OUT-OF-STOCK MODAL ==================== -->
+  <div id="oosModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+        <span style="font-size: 24px; color: var(--color-warning);">⚠️</span>
+        <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--gold-light);">
+          Item Out of Stock Notification
+        </h3>
+      </div>
+      
+      <p style="font-size: 14px; margin-bottom: 16px; color: var(--text-main);" id="oosModalMessage">
+        The kitchen flagged <strong id="oosItemName">Item</strong> as currently out of stock. How would you like to proceed?
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-primary" id="btnOOSOption1">
+          🍲 1. Accept Chef's Recommended Substitution
+        </button>
+        <button class="btn-secondary" id="btnOOSOption2">
+          💳 2. Refund Item Amount to City Star Wallet
+        </button>
+        <button class="btn-secondary" id="btnOOSOption3" style="border-color: var(--color-danger); color: #FCA5A5;">
+          ❌ 3. Cancel Order & Release Dispatch
         </button>
       </div>
     </div>
   </div>
 
-  <!-- QR Express Pickup Modal -->
-  <div class="modal-overlay" id="qr-modal" style="display:none;">
-    <div class="modal-card" style="text-align:center;">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:20px;">📦</span>
-          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Cafeteria Express Pickup QR Code</h4>
-        </div>
-        <button onclick="closeQRModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-      </div>
-      <div class="modal-body">
-        <p style="font-size:13px; color:var(--slate-600); margin-bottom:16px;">Present this QR code at the cafeteria counter to collect your meal immediately without waiting in line.</p>
-        <div style="background:var(--slate-100); padding:20px; border-radius:16px; display:inline-block; border:2px dashed var(--nnpc-green); margin-bottom:16px;">
-          <div id="qr-display-box" style="font-family:monospace; font-weight:800; font-size:24px; color:var(--nnpc-green-dark); letter-spacing:2px; padding:20px; background:#fff; border-radius:10px;">
-            MEALPOINT-9821
-          </div>
-        </div>
-        <div id="qr-order-details" style="font-size:12px; font-weight:700; color:var(--slate-700);">Order #ORD-9821 • Main Cafeteria Counter 2</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Meal Rating Modal -->
-  <div class="modal-overlay" id="rating-modal" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:20px;">⭐</span>
-          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Rate Your Meal & Delivery</h4>
-        </div>
-        <button onclick="closeRatingModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-      </div>
-      <div class="modal-body" style="text-align:center;">
-        <h3 id="rating-meal-title" style="font-size:16px; font-weight:800; color:var(--slate-900); margin-bottom:6px;">NNPC Special Jollof Rice Combo</h3>
-        <p style="font-size:12px; color:var(--slate-500); margin-bottom:20px;">How was your food quality and office delivery speed today?</p>
-        
-        <!-- Stars -->
-        <div style="display:flex; justify-content:center; gap:12px; font-size:32px; cursor:pointer; margin-bottom:20px;" id="star-rating-box">
-          <span onclick="setRatingStar(1)">⭐</span>
-          <span onclick="setRatingStar(2)">⭐</span>
-          <span onclick="setRatingStar(3)">⭐</span>
-          <span onclick="setRatingStar(4)">⭐</span>
-          <span onclick="setRatingStar(5)">⭐</span>
-        </div>
-
-        <textarea id="rating-comment-input" placeholder="Leave a review for Chef & Cafeteria Vendor (optional)..." style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--slate-300); font-size:12px; height:80px; outline:none; margin-bottom:16px;"></textarea>
-
-        <button onclick="submitMealRating()" class="btn-add-cart" style="width:100%; padding:12px; justify-content:center; font-size:14px;">
-          Submit Rating & Review
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Wallet Top Up Modal -->
-  <div class="modal-overlay" id="wallet-topup-modal" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:20px;">💳</span>
-          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Top Up Personal Wallet</h4>
-        </div>
-        <button onclick="closeWalletTopupModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-      </div>
-      <div class="modal-body">
-        <div style="margin-bottom:16px;">
-          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Select Top-Up Amount (₦):</label>
-          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:12px;">
-            <button onclick="selectTopupAmount(2000)" class="category-pill-btn" style="justify-content:center;">₦2,000</button>
-            <button onclick="selectTopupAmount(5000)" class="category-pill-btn" style="justify-content:center;">₦5,000</button>
-            <button onclick="selectTopupAmount(10000)" class="category-pill-btn" style="justify-content:center;">₦10,000</button>
-          </div>
-          <input type="number" id="custom-topup-amount" placeholder="Or enter custom amount in ₦" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
-        </div>
-
-        <button onclick="confirmWalletTopup()" class="btn-add-cart" style="width:100%; padding:12px; justify-content:center; font-size:14px;">
-          Top Up Balance Now
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Vendor Add / Edit Dish Modal -->
-  <div class="modal-overlay" id="vendor-dish-modal" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:20px;">👨‍🍳</span>
-          <h4 id="vendor-modal-title" style="font-size:16px; font-weight:800; margin:0; color:#fff;">Add New Cafeteria Dish</h4>
-        </div>
-        <button onclick="closeVendorDishModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="vendor-dish-edit-id" value="">
-
-        <div style="margin-bottom:14px;">
-          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Dish / Item Name:</label>
-          <input type="text" id="vendor-dish-name" placeholder="e.g. Special Asun Fried Rice & Peppered Chicken" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-          <div>
-            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Category:</label>
-            <select id="vendor-dish-category" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:12px; font-weight:600;">
-              <option value="LOCAL_DISHES">🍛 Local Dishes</option>
-              <option value="FAST_FOOD">🍔 Fast Food</option>
-              <option value="HEALTHY_SALADS">🥗 Healthy Choice</option>
-              <option value="BEVERAGES">🥤 Drinks & Beverages</option>
-              <option value="PASTRIES_SNACKS">🍰 Pastries & Snacks</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Prep Time (Mins):</label>
-            <input type="number" id="vendor-dish-prep-time" value="12" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
-          </div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-          <div>
-            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Standard Price (₦):</label>
-            <input type="number" id="vendor-dish-price" placeholder="3000" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
-          </div>
-          <div>
-            <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Subsidized Price (₦):</label>
-            <input type="number" id="vendor-dish-subsidized-price" placeholder="2000" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; outline:none;">
-          </div>
-        </div>
-
-        <div style="margin-bottom:14px;">
-          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Description:</label>
-          <textarea id="vendor-dish-desc" placeholder="Describe the ingredients and preparation..." style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:12px; height:60px; outline:none;"></textarea>
-        </div>
-
-        <div style="margin-bottom:16px;">
-          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:4px;">Image URL (optional):</label>
-          <input type="text" id="vendor-dish-image" placeholder="https://images.unsplash.com/..." style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--slate-300); font-size:12px; outline:none;">
-        </div>
-
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
-          <input type="checkbox" id="vendor-dish-available" checked style="width:18px; height:18px;">
-          <label for="vendor-dish-available" style="font-size:13px; font-weight:700; color:var(--slate-800);">Item is Available for Order</label>
-        </div>
-
-        <button onclick="saveVendorDish()" class="btn-add-cart" style="width:100%; padding:12px; justify-content:center; font-size:14px;">
-          💾 Save Dish to Cafeteria Menu
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Vendor Order Rejection Modal -->
-  <div class="modal-overlay" id="vendor-reject-modal" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header" style="background:var(--nnpc-red);">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:20px;">🚫</span>
-          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Reject Workplace Order</h4>
-        </div>
-        <button onclick="closeVendorRejectModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="reject-order-id" value="">
-        <p style="font-size:13px; color:var(--slate-600); margin-bottom:14px;">Select reason for rejecting order:</p>
-        <select id="reject-reason-select" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--slate-300); font-size:13px; font-weight:600; margin-bottom:20px;">
-          <option value="Item Out of Stock / Sold Out">Item Out of Stock / Sold Out</option>
-          <option value="Kitchen Peak Overcapacity / Store Busy">Kitchen Peak Overcapacity / Store Busy</option>
-          <option value="Cafeteria Closing Soon">Cafeteria Closing Soon</option>
-        </select>
-        <button onclick="confirmVendorOrderRejection()" style="width:100%; padding:12px; background:var(--nnpc-red); color:#fff; border:none; border-radius:10px; font-weight:800; cursor:pointer;">
-          Confirm Order Rejection
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Printable KDS Receipt Modal -->
-  <div class="modal-overlay" id="receipt-modal" style="display:none;">
-    <div class="modal-card" style="max-width:440px;">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:20px;">🖨️</span>
-          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Kitchen Receipt & Checklist</h4>
-        </div>
-        <button onclick="closeReceiptModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-      </div>
-      <div class="modal-body" id="printable-receipt-area" style="background:#fff; color:var(--slate-900);">
-        <div style="text-align:center; border-bottom:2px dashed var(--slate-300); padding-bottom:14px; margin-bottom:14px;">
-          <img src="nnpc-logo.svg" alt="NNPC Logo" style="height:32px; margin-bottom:6px;">
-          <h3 style="font-size:16px; font-weight:900;">MEAL POINT WORKPLACE RECEIPT</h3>
-          <div style="font-size:11px; color:var(--slate-500);">NNPC Limited Towers Main Cafeteria</div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px;">
-          <span><strong>Order ID:</strong> <span id="receipt-order-id">ORD-9821</span></span>
-          <span><strong>Date:</strong> <span id="receipt-date">12:05 PM</span></span>
-        </div>
-
-        <div style="background:var(--slate-100); padding:10px; border-radius:8px; margin-bottom:14px; font-size:12px;">
-          <div><strong>Staff:</strong> <span id="receipt-customer-name">Engr. Babatunde Lawal</span></div>
-          <div><strong>Staff ID:</strong> <span id="receipt-staff-id">NNPC/ENG/2021/4892</span></div>
-          <div><strong>Destination:</strong> <span id="receipt-location">NNPC HQ Tower A • Floor 7 • Office 712</span></div>
-          <div style="margin-top:6px; font-size:14px; font-weight:800; color:var(--nnpc-green);">
-            VERIFICATION CODE: <span id="receipt-code-display" class="verification-code-badge" style="font-size:18px; padding:4px 10px;">9821</span>
-          </div>
-        </div>
-
-        <div style="border-bottom:1px solid var(--slate-200); padding-bottom:10px; margin-bottom:10px;">
-          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--slate-500); margin-bottom:6px;">Itemized Checklist:</div>
-          <div id="receipt-items-list" style="font-size:12px;">
-            <!-- Items -->
-          </div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:800; margin-bottom:16px;">
-          <span>Total Amount Paid (Subsidy):</span>
-          <span id="receipt-total-amount" style="color:var(--nnpc-green);">₦2,500</span>
-        </div>
-
-        <button onclick="window.print()" class="btn-add-cart" style="width:100%; padding:12px; justify-content:center; font-size:14px;">
-          🖨️ Print Kitchen Receipt
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Courier Hand-Off & Proof of Delivery Modal -->
-  <div class="modal-overlay" id="courier-proof-modal" style="display:none;">
-    <div class="modal-card">
-      <div class="modal-header" style="background:var(--slate-900);">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:20px;">🏁</span>
-          <h4 style="font-size:16px; font-weight:800; margin:0; color:#fff;">Confirm Customer Drop-Off</h4>
-        </div>
-        <button onclick="closeCourierProofModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="courier-deliver-order-id" value="">
-        
-        <div style="margin-bottom:16px;">
-          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Option A: Enter Customer 4-Digit Hand-Off Code:</label>
-          <input type="text" id="courier-customer-code" placeholder="e.g. 4892" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--slate-300); font-size:16px; font-weight:800; font-family:monospace; text-align:center; outline:none;">
-        </div>
-
-        <div style="text-align:center; font-size:12px; font-weight:700; color:var(--slate-400); margin:12px 0;">— OR —</div>
-
-        <div style="margin-bottom:20px;">
-          <label style="font-size:12px; font-weight:700; color:var(--slate-700); display:block; margin-bottom:6px;">Option B: Contactless Desk Photo Proof:</label>
-          <button onclick="simulatePhotoUpload()" class="category-pill-btn" style="width:100%; justify-content:center; padding:10px;">📷 Take / Upload Desk Photo</button>
-          <div id="photo-upload-status" style="font-size:11px; color:var(--nnpc-green); font-weight:700; margin-top:6px; display:none;">✅ Photo Proof Attached!</div>
-        </div>
-
-        <button onclick="confirmCourierDelivery()" class="courier-btn-large courier-btn-accept" style="width:100%;">
-          ✅ Complete Delivery & Credit Earnings (+₦1,200)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts -->
+  <script src="store.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

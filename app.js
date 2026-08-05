@@ -1,1386 +1,1296 @@
-// Meal Point - NNPC Limited Workplace Food Platform - Core Application Logic
+/**
+ * City Star Super-App Platform & AI Orchestration Engine
+ * UI Controller & Dynamic Render Engine
+ */
 
-// Mock Seed Data
-const MOCK_DATA = {
-  users: {
-    EMPLOYEE: {
-      staffId: 'NNPC/ENG/2021/4892',
-      name: 'Engr. Babatunde Lawal',
-      title: 'Senior Petroleum Engineer',
-      department: 'Upstream Operations',
-      building: 'NNPC HQ Tower A',
-      floor: 'Floor 7',
-      office: 'Office 712',
-      avatar: '👨‍💼',
-      role: 'EMPLOYEE',
-      wallet: { subsidyBalance: 14500, personalBalance: 6200 }
-    },
-    INTERN: {
-      staffId: 'NNPC/INT/2026/014',
-      name: 'Chidiebere Okafor',
-      title: 'Graduate Petroleum Intern',
-      department: 'Reservoir Engineering',
-      building: 'NNPC HQ Tower B',
-      floor: 'Floor 3',
-      office: 'Office 305',
-      avatar: '🎓',
-      role: 'INTERN',
-      wallet: { subsidyBalance: 8500, personalBalance: 2000 }
-    },
-    CONTRACTOR: {
-      staffId: 'NNPC/CON/2025/109',
-      name: 'Michael Sterling',
-      title: 'Senior IT Consultant',
-      department: 'IT & Digital Transformation',
-      building: 'Executive Wing Tower C',
-      floor: 'Floor 5',
-      office: 'Office 502',
-      avatar: '💼',
-      role: 'CONTRACTOR',
-      wallet: { subsidyBalance: 0, personalBalance: 18500 }
-    },
-    CAFETERIA_VENDOR: {
-      staffId: 'NNPC/CAF/2018/003',
-      name: 'Chef Aliyu Mohammed',
-      title: 'Head Chef & Vendor Manager',
-      department: 'NNPC Towers Main Cafeteria',
-      building: 'Ground Floor, Block A',
-      floor: 'Ground Floor',
-      office: 'Kitchen 1',
-      avatar: '👨‍🍳',
-      role: 'CAFETERIA_VENDOR',
-      wallet: { subsidyBalance: 20000, personalBalance: 15000 }
-    },
-    SUPER_ADMIN: {
-      staffId: 'NNPC/ADM/2010/001',
-      name: 'Arc. Kabir Ibrahim',
-      title: 'Chief Information Officer (CIO)',
-      department: 'IT & Digital Transformation',
-      building: 'Executive Wing Tower A',
-      floor: 'Floor 12',
-      office: 'Suite 1201',
-      avatar: '🛡️',
-      role: 'SUPER_ADMIN',
-      wallet: { subsidyBalance: 20000, personalBalance: 50000 }
-    },
-    COURIER: {
-      staffId: 'NNPC/LOG/2024/088',
-      name: 'Musa Garba',
-      title: 'Senior Floor Dispatcher & Courier',
-      department: 'Workplace Logistics',
-      building: 'NNPC HQ Logistics Hub',
-      floor: 'Ground Floor',
-      office: 'Dispatch Station 2',
-      avatar: '🛵',
-      role: 'COURIER',
-      vehicle: 'Motorbike #04 (NNPC Express)',
-      rating: 4.95,
-      earningsToday: 18500,
-      completedDeliveriesToday: 14,
-      wallet: { subsidyBalance: 10000, personalBalance: 28500 }
-    }
-  },
-
-  cafeterias: [
-    { id: 'caf-1', name: 'NNPC Towers Main Cafeteria', location: 'Ground Floor, Block A, Abuja', rating: 4.9, status: 'OPEN' },
-    { id: 'caf-2', name: 'Executive Lounge & Dining', location: '11th Floor, Executive Wing, Abuja', rating: 4.9, status: 'OPEN' },
-    { id: 'caf-3', name: 'Refinery Staff Pavilion', location: 'Port Harcourt Refining Complex', rating: 4.7, status: 'OPEN' }
-  ],
-
-  menuItems: [
-    {
-      id: 'item-1',
-      cafeteriaId: 'caf-1',
-      name: 'NNPC Special Jollof Rice Combo',
-      description: 'Smokey firewood Jollof rice, fried plantain, spicy grilled chicken leg, and fresh coleslaw.',
-      category: 'LOCAL_DISHES',
-      price: 2500,
-      subsidizedPrice: 1800,
-      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80',
-      stock: 45,
-      prepTime: 12,
-      rating: 4.9,
-      isAvailable: true,
-      isSpecial: true
-    },
-    {
-      id: 'item-2',
-      cafeteriaId: 'caf-1',
-      name: 'Pounded Yam & Egusi (Goat Meat)',
-      description: 'Smooth white pounded yam served with rich melon Egusi soup, stockfish, and tender goat meat.',
-      category: 'LOCAL_DISHES',
-      price: 3200,
-      subsidizedPrice: 2200,
-      image: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=600&q=80',
-      stock: 30,
-      prepTime: 15,
-      rating: 4.8,
-      isAvailable: true,
-      isSpecial: false
-    },
-    {
-      id: 'item-3',
-      cafeteriaId: 'caf-1',
-      name: 'Gourmet Beef Burger & Potato Wedges',
-      description: '100% Angus beef patty, melted cheddar cheese, caramelized onions, crisp lettuce, served with crispy wedges.',
-      category: 'FAST_FOOD',
-      price: 3800,
-      subsidizedPrice: 2500,
-      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80',
-      stock: 20,
-      prepTime: 10,
-      rating: 4.7,
-      isAvailable: true,
-      isSpecial: false
-    },
-    {
-      id: 'item-4',
-      cafeteriaId: 'caf-1',
-      name: 'Quinoa & Grilled Salmon Salad Bowl',
-      description: 'Fluffy organic quinoa, Norwegian grilled salmon fillet, avocado slices, and lemon herb vinaigrette.',
-      category: 'HEALTHY_SALADS',
-      price: 4800,
-      subsidizedPrice: 3200,
-      image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80',
-      stock: 15,
-      prepTime: 12,
-      rating: 4.9,
-      isAvailable: true,
-      isSpecial: true
-    },
-    {
-      id: 'item-5',
-      cafeteriaId: 'caf-1',
-      name: 'Classic NNPC Meat Pie & Ice-Cold Maltina',
-      description: 'Flaky golden pastry filled with seasoned minced beef, potatoes, served with ice-cold Maltina.',
-      category: 'PASTRIES_SNACKS',
-      price: 1200,
-      subsidizedPrice: 700,
-      image: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281292?auto=format&fit=crop&w=600&q=80',
-      stock: 60,
-      prepTime: 5,
-      rating: 4.6,
-      isAvailable: true,
-      isSpecial: false
-    },
-    {
-      id: 'item-6',
-      cafeteriaId: 'caf-1',
-      name: 'Fresh Mango & Pineapple Smoothie',
-      description: '100% natural freshly blended tropical mango, pineapple, and honey smoothie.',
-      category: 'BEVERAGES',
-      price: 1500,
-      subsidizedPrice: 900,
-      image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=600&q=80',
-      stock: 40,
-      prepTime: 5,
-      rating: 4.9,
-      isAvailable: true,
-      isSpecial: false
-    }
-  ],
-
-  initialOrders: [
-    {
-      id: 'ORD-9821',
-      customerName: 'Engr. Babatunde Lawal',
-      staffId: 'NNPC/ENG/2021/4892',
-      cafeteriaName: 'NNPC Towers Main Cafeteria',
-      deliveryBuilding: 'NNPC HQ Tower A',
-      deliveryFloor: 'Floor 7',
-      deliveryDept: 'Upstream Operations',
-      deliveryOffice: 'Office 712',
-      fulfillmentMethod: 'DELIVERY',
-      scheduledTime: '12:30 PM',
-      items: [
-        { id: 'item-1', name: 'NNPC Special Jollof Rice Combo', qty: 1, price: 1800 },
-        { id: 'item-5', name: 'Classic NNPC Meat Pie & Ice-Cold Maltina', qty: 1, price: 700 }
-      ],
-      total: 2500,
-      status: 'PREPARING',
-      prepTimeRemaining: 8,
-      timestamp: '12:05 PM',
-      qrCode: 'MEALPOINT-9821-VALID'
-    },
-    {
-      id: 'ORD-9820',
-      customerName: 'Chidiebere Okafor',
-      staffId: 'NNPC/INT/2026/014',
-      cafeteriaName: 'NNPC Towers Main Cafeteria',
-      deliveryBuilding: 'NNPC HQ Tower B',
-      deliveryFloor: 'Floor 3',
-      deliveryDept: 'Reservoir Engineering',
-      deliveryOffice: 'Office 305',
-      fulfillmentMethod: 'DELIVERY',
-      scheduledTime: 'IMMEDIATE',
-      items: [
-        { id: 'item-2', name: 'Pounded Yam & Egusi (Goat Meat)', qty: 1, price: 2200 }
-      ],
-      total: 2200,
-      status: 'DELIVERED',
-      prepTimeRemaining: 0,
-      timestamp: '11:40 AM',
-      qrCode: 'MEALPOINT-9820-VALID'
-    }
-  ],
-
-  notifications: [
-    { id: 'notif-1', title: 'Order Accepted 📝', message: 'Your order #ORD-9821 has been received by NNPC Main Cafeteria.', time: '10 Mins ago', unread: true },
-    { id: 'notif-2', title: 'Kitchen Preparing 👨‍🍳', message: 'Chef Aliyu is preparing your Jollof Rice Combo. ~8 mins remaining.', time: '5 Mins ago', unread: true },
-    { id: 'notif-3', title: 'Subsidy Refreshed 💳', message: 'Your NNPC monthly meal subsidy balance has been credited.', time: '2 Hours ago', unread: false }
-  ]
-};
-
-// Global Application State
-const state = {
-  currentRole: 'EMPLOYEE',
-  activeCategory: 'ALL',
-  searchQuery: '',
-  cart: [],
-  orders: [...MOCK_DATA.initialOrders],
-  favorites: ['item-1', 'item-4'],
-  activeTab: 'menu',
-  wallet: { ...MOCK_DATA.users.EMPLOYEE.wallet },
-  deliveryBuilding: MOCK_DATA.users.EMPLOYEE.building,
-  deliveryFloor: MOCK_DATA.users.EMPLOYEE.floor,
-  deliveryDept: MOCK_DATA.users.EMPLOYEE.department,
-  deliveryOffice: MOCK_DATA.users.EMPLOYEE.office,
-  fulfillmentMethod: 'DELIVERY',
-  scheduledTime: 'IMMEDIATE',
-  notifications: [...MOCK_DATA.notifications],
-  menuItems: [...MOCK_DATA.menuItems],
-  ratingStar: 5,
-  ratingMealId: null
-};
-
-// Application Initialization
 document.addEventListener('DOMContentLoaded', () => {
-  initRoleSwitcher();
-  renderApp();
-});
+  const store = window.cityStarStore;
 
-// Role Switcher
-function initRoleSwitcher() {
-  const chips = document.querySelectorAll('.role-chip');
-  chips.forEach(chip => {
-    chip.addEventListener('click', (e) => {
-      chips.forEach(c => c.classList.remove('active'));
-      const targetRole = e.currentTarget.getAttribute('data-role');
-      e.currentTarget.classList.add('active');
-      switchRole(targetRole);
+  // Cache DOM Elements
+  const branchSelector = document.getElementById('branchSelector');
+  const userWalletDisplay = document.getElementById('userWalletDisplay');
+  const userPointsDisplay = document.getElementById('userPointsDisplay');
+  const roleButtons = document.querySelectorAll('.role-btn');
+  const portalViews = document.querySelectorAll('.portal-view');
+
+  // Web Audio API Synthesized Chime Sound Generator
+  function playAudioChime() {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    } catch (e) {
+      console.log('Audio chime simulated');
+    }
+  }
+
+  const appTabButtons = document.querySelectorAll('.app-tab-btn');
+  const userMainContent = document.getElementById('userMainContent');
+  const sidePanelContent = document.getElementById('sidePanelContent');
+  const activeOrderCount = document.getElementById('activeOrderCount');
+
+  const merchantMainContent = document.getElementById('merchantMainContent');
+  const kdsTabKitchen = document.getElementById('kdsTabKitchen');
+  const kdsTabLedger = document.getElementById('kdsTabLedger');
+  const kdsTabScanner = document.getElementById('kdsTabScanner');
+
+  const courierOrdersGrid = document.getElementById('courierOrdersGrid');
+  const verificationOrderSelect = document.getElementById('verificationOrderSelect');
+  const verificationCodeInput = document.getElementById('verificationCodeInput');
+  const btnVerifyCode = document.getElementById('btnVerifyCode');
+  const verificationResultMsg = document.getElementById('verificationResultMsg');
+
+  const adminOrdersTableBody = document.getElementById('adminOrdersTableBody');
+  const adminInventoryList = document.getElementById('adminInventoryList');
+  const statTotalRevenue = document.getElementById('statTotalRevenue');
+  const statActiveDeliveries = document.getElementById('statActiveDeliveries');
+  const statRoomOccupancy = document.getElementById('statRoomOccupancy');
+  const statSLABreaches = document.getElementById('statSLABreaches');
+  const slaAlertBannerContainer = document.getElementById('slaAlertBannerContainer');
+
+  const oosModal = document.getElementById('oosModal');
+  const oosItemName = document.getElementById('oosItemName');
+  const btnOOSOption1 = document.getElementById('btnOOSOption1');
+  const btnOOSOption2 = document.getElementById('btnOOSOption2');
+  const btnOOSOption3 = document.getElementById('btnOOSOption3');
+
+  let merchantSubTab = 'kitchen'; // 'kitchen' | 'ledger' | 'scanner'
+
+  // Cart Local State
+  let userCart = [];
+
+  // ==================== INITIALIZATION & EVENT LISTENERS ====================
+
+  // Subscribe to store updates
+  store.subscribe(renderAll);
+
+  // Branch Selector Switch
+  branchSelector.addEventListener('change', (e) => {
+    store.setBranch(e.target.value);
+  });
+
+  // Role Switcher Navigation
+  roleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const role = btn.dataset.role;
+      roleButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      portalViews.forEach(v => v.classList.remove('active'));
+      const targetPortal = document.getElementById(`portal-${role}`);
+      if (targetPortal) targetPortal.classList.add('active');
+
+      store.setRole(role);
     });
   });
-}
 
-function switchRole(role) {
-  state.currentRole = role;
-  const userObj = MOCK_DATA.users[role];
-  state.wallet = { ...userObj.wallet };
-  state.deliveryBuilding = userObj.building;
-  state.deliveryFloor = userObj.floor;
-  state.deliveryDept = userObj.department;
-  state.deliveryOffice = userObj.office;
-
-  // Header UI Update
-  document.getElementById('header-user-name').innerText = userObj.name;
-  document.getElementById('header-user-title').innerText = `${userObj.title} • ${userObj.department}`;
-  document.getElementById('header-user-avatar').innerText = userObj.avatar;
-  document.getElementById('header-wallet-balance').innerText = `₦${state.wallet.subsidyBalance.toLocaleString()}`;
-  updateDeliveryPillText();
-
-  if (role === 'CAFETERIA_VENDOR') {
-    switchTab('vendor');
-  } else if (role === 'SUPER_ADMIN') {
-    switchTab('admin');
-  } else if (role === 'COURIER') {
-    switchTab('courier');
-  } else {
-    switchTab('menu');
-  }
-
-  showToast(`Switched perspective to: ${userObj.name} (${role.replace('_', ' ')})`);
-}
-
-function updateDeliveryPillText() {
-  const pillText = `${state.deliveryBuilding} • ${state.deliveryFloor} • ${state.deliveryDept} • ${state.deliveryOffice}`;
-  document.getElementById('delivery-pill-text').innerText = pillText;
-  document.getElementById('checkout-delivery-location').innerText = pillText;
-}
-
-function switchTab(tab) {
-  state.activeTab = tab;
-  renderSidebarNav();
-  renderMainContent();
-}
-
-function renderApp() {
-  renderSidebarNav();
-  renderMainContent();
-  renderNotificationsList();
-}
-
-function renderSidebarNav() {
-  const container = document.getElementById('sidebar-nav');
-  let html = '';
-
-  if (state.currentRole === 'EMPLOYEE' || state.currentRole === 'INTERN' || state.currentRole === 'CONTRACTOR') {
-    html = `
-      <div class="nav-section-label">Meal Point Service</div>
-      <div class="nav-item ${state.activeTab === 'menu' ? 'active' : ''}" onclick="switchTab('menu')">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        Cafeteria Menu
-      </div>
-      <div class="nav-item ${state.activeTab === 'orders' ? 'active' : ''}" onclick="switchTab('orders')">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        My Orders & Tracking
-      </div>
-      <div class="nav-item ${state.activeTab === 'favorites' ? 'active' : ''}" onclick="switchTab('favorites')">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-        Favorite Meals
-      </div>
-      <div class="nav-item ${state.activeTab === 'wallet' ? 'active' : ''}" onclick="switchTab('wallet')">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-        Subsidy Wallet
-      </div>
-    `;
-  } else if (state.currentRole === 'CAFETERIA_VENDOR') {
-    html = `
-      <div class="nav-section-label">Vendor Management</div>
-      <div class="nav-item ${state.activeTab === 'vendor' ? 'active' : ''}" onclick="switchTab('vendor')">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Kitchen Orders (KDS)
-      </div>
-    `;
-  } else if (state.currentRole === 'COURIER') {
-    html = `
-      <div class="nav-section-label">Courier Logistics</div>
-      <div class="nav-item ${state.activeTab === 'courier' ? 'active' : ''}" onclick="switchTab('courier')">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        Rider Dispatch & Hand-off
-      </div>
-    `;
-  } else if (state.currentRole === 'SUPER_ADMIN') {
-    html = `
-      <div class="nav-section-label">Enterprise Control</div>
-      <div class="nav-item ${state.activeTab === 'admin' ? 'active' : ''}" onclick="switchTab('admin')">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-        Platform Analytics
-      </div>
-    `;
-  }
-
-  container.innerHTML = html;
-}
-
-function renderMainContent() {
-  const container = document.getElementById('main-container');
-
-  if (state.activeTab === 'menu') {
-    renderMenuView(container);
-  } else if (state.activeTab === 'orders') {
-    renderOrdersView(container);
-  } else if (state.activeTab === 'favorites') {
-    renderFavoritesView(container);
-  } else if (state.activeTab === 'wallet') {
-    renderWalletView(container);
-  } else if (state.activeTab === 'vendor') {
-    renderVendorView(container);
-  } else if (state.activeTab === 'courier') {
-    renderCourierView(container);
-  } else if (state.activeTab === 'admin') {
-    renderAdminView(container);
-  }
-}
-
-// ----------------------------------------------------
-// MENU VIEW
-// ----------------------------------------------------
-function renderMenuView(container) {
-  const userObj = MOCK_DATA.users[state.currentRole];
-  const timeGreeting = getTimeGreeting();
-
-  const filteredItems = state.menuItems.filter(item => {
-    const matchesCategory = state.activeCategory === 'ALL' || item.category === state.activeCategory;
-    const matchesSearch = item.name.toLowerCase().includes(state.searchQuery) || item.description.toLowerCase().includes(state.searchQuery);
-    return matchesCategory && matchesSearch;
+  // User Operational Mode Tabs
+  appTabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      appTabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      store.setUserTab(btn.dataset.usertab);
+    });
   });
 
-  const specials = state.menuItems.filter(item => item.isSpecial);
+  // Merchant Sub-Tab Handlers
+  if (kdsTabKitchen) kdsTabKitchen.addEventListener('click', () => { merchantSubTab = 'kitchen'; renderMerchantPortal(); });
+  if (kdsTabLedger) kdsTabLedger.addEventListener('click', () => { merchantSubTab = 'ledger'; renderMerchantPortal(); });
+  if (kdsTabScanner) kdsTabScanner.addEventListener('click', () => { merchantSubTab = 'scanner'; renderMerchantPortal(); });
 
-  container.innerHTML = `
-    <!-- Personalized Hero Greeting -->
-    <div class="hero-greeting-card">
-      <div class="hero-greeting-title">${timeGreeting}, ${userObj.name}</div>
-      <div class="hero-greeting-subtitle">What would you like to eat today at NNPC Limited?</div>
-      <div class="hero-search-wrapper">
-        <span class="hero-search-icon">🔍</span>
-        <input type="text" class="hero-search-input" id="menu-search-input" value="${state.searchQuery}" placeholder="Search meals, snacks, healthy bowls, drinks..." oninput="handleSearchInput(event)">
-      </div>
-    </div>
+  // Verification Code Form Handler
+  if (btnVerifyCode) {
+    btnVerifyCode.addEventListener('click', () => {
+      const orderId = verificationOrderSelect.value;
+      const codeEntered = verificationCodeInput.value.trim();
 
-    <!-- Food Category Pills -->
-    <div class="category-pills-bar">
-      <button class="category-pill-btn ${state.activeCategory === 'ALL' ? 'active' : ''}" onclick="setCategory('ALL')">🍽️ All Meals</button>
-      <button class="category-pill-btn ${state.activeCategory === 'LOCAL_DISHES' ? 'active' : ''}" onclick="setCategory('LOCAL_DISHES')">🍛 Local Dishes</button>
-      <button class="category-pill-btn ${state.activeCategory === 'FAST_FOOD' ? 'active' : ''}" onclick="setCategory('FAST_FOOD')">🍔 Fast Food</button>
-      <button class="category-pill-btn ${state.activeCategory === 'HEALTHY_SALADS' ? 'active' : ''}" onclick="setCategory('HEALTHY_SALADS')">🥗 Healthy Choice</button>
-      <button class="category-pill-btn ${state.activeCategory === 'BEVERAGES' ? 'active' : ''}" onclick="setCategory('BEVERAGES')">🥤 Drinks</button>
-      <button class="category-pill-btn ${state.activeCategory === 'PASTRIES_SNACKS' ? 'active' : ''}" onclick="setCategory('PASTRIES_SNACKS')">🍰 Pastries & Snacks</button>
-    </div>
+      if (!orderId) {
+        verificationResultMsg.style.color = '#F59E0B';
+        verificationResultMsg.textContent = 'Please select an order first.';
+        return;
+      }
 
-    <!-- Today's Special Banner -->
-    ${specials.length > 0 ? `
-      <div class="specials-banner">
-        <div>
-          <span class="specials-badge">⭐ Today's Chef Special</span>
-          <h3 style="font-size:16px; font-weight:800; color:var(--slate-900); margin-top:6px;">${specials[0].name}</h3>
-          <p style="font-size:12px; color:var(--slate-600); margin-top:2px;">${specials[0].description}</p>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:18px; font-weight:800; color:var(--nnpc-green);">₦${specials[0].subsidizedPrice.toLocaleString()}</div>
-          <button onclick="addToCart('${specials[0].id}')" class="btn-add-cart" style="margin-top:6px;">Add to Order</button>
-        </div>
-      </div>
-    ` : ''}
+      const ord = store.orders.find(o => o.id === orderId);
+      if (ord) {
+        if (ord.verificationCode === codeEntered) {
+          store.updateOrderStatus(orderId, 'DELIVERED');
+          verificationResultMsg.style.color = '#10B981';
+          verificationResultMsg.textContent = `✓ Verification Successful! Order ${orderId} marked DELIVERED.`;
+          verificationCodeInput.value = '';
+        } else {
+          verificationResultMsg.style.color = '#EF4444';
+          verificationResultMsg.textContent = `✕ Incorrect Security Code (${codeEntered}). Please match 4-digit code.`;
+        }
+      }
+    });
+  }
 
-    <!-- Popular Meals Grid -->
-    <div class="section-header">
-      <h2 class="section-title">🍛 Popular & Recommended Meals</h2>
-      <span style="font-size:12px; color:var(--slate-500); font-weight:600;">Showing ${filteredItems.length} items</span>
-    </div>
+  // Courier Runner Touchscreen Keypad Handlers
+  const runnerKeypad = document.getElementById('runnerKeypad');
+  if (runnerKeypad) {
+    runnerKeypad.querySelectorAll('.keypad-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.key;
+        if (key === 'CLR') {
+          verificationCodeInput.value = '';
+        } else if (key === 'DEL') {
+          verificationCodeInput.value = verificationCodeInput.value.slice(0, -1);
+        } else if (verificationCodeInput.value.length < 4) {
+          verificationCodeInput.value += key;
+        }
+      });
+    });
+  }
 
-    <div class="meal-grid">
-      ${filteredItems.map(item => `
-        <div class="meal-card">
-          <div class="meal-card-image-wrap">
-            <img src="${item.image}" alt="${item.name}" class="meal-card-image">
-            <span class="meal-card-badge">⏱️ ${item.prepTime} Mins</span>
-            ${!item.isAvailable ? `<div class="meal-sold-out-overlay">Sold Out</div>` : ''}
+  // 3-Way Out-of-Stock Modal Buttons
+  if (btnOOSOption1) btnOOSOption1.addEventListener('click', () => store.resolveOOS(1));
+  if (btnOOSOption2) btnOOSOption2.addEventListener('click', () => store.resolveOOS(2));
+  if (btnOOSOption3) btnOOSOption3.addEventListener('click', () => store.resolveOOS(3));
+
+
+  // ==================== MASTER RENDER FUNCTION ====================
+  function renderAll() {
+    // 1. Render Wallet, Points & Branch state
+    branchSelector.value = store.currentBranch;
+    if (userWalletDisplay) userWalletDisplay.textContent = `₦${store.userWallet.toLocaleString()}`;
+    if (userPointsDisplay) userPointsDisplay.textContent = `${store.userPoints.toLocaleString()} PTS`;
+
+    const activeCount = store.getBranchOrders().filter(o => o.status !== 'DELIVERED' && o.status !== 'CANCELLED').length;
+    if (activeOrderCount) activeOrderCount.textContent = activeCount;
+
+    // 2. Synchronize Role Buttons & Portal Views State
+    roleButtons.forEach(btn => {
+      if (btn.dataset.role === store.activeRole) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+
+    portalViews.forEach(v => {
+      if (v.id === `portal-${store.activeRole}`) v.classList.add('active');
+      else v.classList.remove('active');
+    });
+
+    // 3. Synchronize User Tab Buttons State
+    appTabButtons.forEach(b => {
+      if (b.dataset.usertab === store.activeUserTab) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+
+    // 4. Render Active Role Views
+    renderUserPortal();
+    renderMerchantPortal();
+    renderCourierPortal();
+    renderAdminPortal();
+
+    // 5. Check for Out of Stock Modal
+    if (store.activeOOSOrder) {
+      if (oosItemName) oosItemName.textContent = store.activeOOSOrder.itemName;
+      if (oosModal) oosModal.style.display = 'flex';
+    } else {
+      if (oosModal) oosModal.style.display = 'none';
+    }
+  }
+
+  // ==================== USER PORTAL 4-SCREEN RENDERER ====================
+  let carouselSlideIndex = 0;
+  let carouselTimer = null;
+
+  function renderUserPortal() {
+    const tab = store.activeUserTab;
+
+    if (tab === 'hub') {
+      renderHubScreenA();
+    } else if (tab === 'eat') {
+      renderEatScreenB();
+    } else if (tab === 'stay') {
+      renderStayScreenC();
+    } else if (tab === 'pass') {
+      renderPassScreenD();
+    }
+
+    renderUserSidePanel();
+  }
+
+  // SCREEN A: The City Star Hub (Home Entry Point)
+  function renderHubScreenA() {
+    const activeBranch = store.branches[store.currentBranch];
+    const activeOrders = store.getBranchOrders().filter(o => o.status !== 'DELIVERED' && o.status !== 'CANCELLED');
+    const activePasses = store.userPasses.filter(p => p.branch === store.currentBranch);
+
+    let html = `
+      <!-- Top Hero Carousel -->
+      <div class="hero-carousel-container">
+        <div class="carousel-slides" id="carouselSlides" style="transform: translateX(-${carouselSlideIndex * 33.333}%);">
+          <div class="carousel-slide">
+            <img src="${activeBranch.heroImage}" alt="${activeBranch.name}" class="carousel-img" onerror="this.src='https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80'">
+            <div class="carousel-caption">
+              <span class="card-badge badge-gold" style="position:static; margin-bottom: 4px; display:inline-block;">PREMIUM RESORT & SUITES</span>
+              <h2 style="font-family: var(--font-heading); font-size: 24px; color: #FFF; font-weight:800;">Welcome to ${activeBranch.name}</h2>
+              <p style="font-size: 12px; color: var(--gold-light);">${activeBranch.address}</p>
+            </div>
           </div>
-          <div class="meal-card-body">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-              <h3 class="meal-card-title">${item.name}</h3>
-              <span style="font-size:12px; font-weight:700; color:var(--nnpc-gold-dark);">⭐ ${item.rating}</span>
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80" alt="Executive Suites" class="carousel-img">
+            <div class="carousel-caption">
+              <span class="card-badge badge-green" style="position:static; margin-bottom: 4px; display:inline-block;">LUXURY ACCOMMODATION</span>
+              <h2 style="font-family: var(--font-heading); font-size: 24px; color: #FFF; font-weight:800;">Executive Suites & Private Chalets</h2>
+              <p style="font-size: 12px; color: var(--text-muted);">10-minute hold lock booking engine ready</p>
             </div>
-            <p class="meal-card-desc">${item.description}</p>
-            <div class="meal-card-meta">
-              <span>🏢 NNPC HQ Cafeteria</span>
-              <span>• Stock: ${item.stock} left</span>
+          </div>
+          <div class="carousel-slide">
+            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80" alt="Suya Gourmet Buffet" class="carousel-img">
+            <div class="carousel-caption">
+              <span class="card-badge badge-blue" style="position:static; margin-bottom: 4px; display:inline-block;">GOURMET DINING</span>
+              <h2 style="font-family: var(--font-heading); font-size: 24px; color: #FFF; font-weight:800;">Signature Suya & Royal Prawns</h2>
+              <p style="font-size: 12px; color: var(--text-muted);">In-room dining & 90s external courier dispatch</p>
             </div>
-            <div class="meal-card-footer">
-              <div class="meal-price-box">
-                <span class="meal-price-subsidized">₦${item.subsidizedPrice.toLocaleString()}</span>
-                <span class="meal-price-original">₦${item.price.toLocaleString()}</span>
+          </div>
+        </div>
+
+        <div class="carousel-indicators">
+          <div class="carousel-dot ${carouselSlideIndex === 0 ? 'active' : ''}" data-slide="0"></div>
+          <div class="carousel-dot ${carouselSlideIndex === 1 ? 'active' : ''}" data-slide="1"></div>
+          <div class="carousel-dot ${carouselSlideIndex === 2 ? 'active' : ''}" data-slide="2"></div>
+        </div>
+      </div>
+
+      <!-- The Three Pillars (Prominent Styled Cards) -->
+      <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--gold-light); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">
+        Explore City Star Experience
+      </h3>
+
+      <div class="pillars-grid">
+        <div class="pillar-card pillar-stay" id="btnPillarStay">
+          <span class="pillar-icon">🏨</span>
+          <div class="pillar-title" style="color: #34D399;">STAY</div>
+          <div class="pillar-desc">Hotel Room & Chalet Booking Engine</div>
+        </div>
+
+        <div class="pillar-card pillar-eat" id="btnPillarEat">
+          <span class="pillar-icon">🍔</span>
+          <div class="pillar-title" style="color: var(--gold-light);">EAT</div>
+          <div class="pillar-desc">Food Delivery, Pick-up & Room Service</div>
+        </div>
+
+        <div class="pillar-card pillar-play" id="btnPillarPlay">
+          <span class="pillar-icon">🏊</span>
+          <div class="pillar-title" style="color: #C084FC;">PLAY</div>
+          <div class="pillar-desc">Gym & Pool Access Passes & Master QR</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions / Active Hub Widget -->
+      <div class="quick-hub-widget">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h4 style="font-family: var(--font-heading); font-size: 16px; color: var(--gold-light);">
+            ⚡ Quick Actions & Active Status
+          </h4>
+          <span class="badge-gold">LIVE ORCHESTRATION</span>
+        </div>
+
+        ${activeOrders.length > 0 ? `
+          <div class="pin-tracker-banner">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+              <span class="pin-badge-header">⚡ CUSTOMER ORDER TRACKER — #${activeOrders[0].id}</span>
+              <span class="card-badge badge-gold" style="position:static;">${activeOrders[0].status}</span>
+            </div>
+            <div style="font-size: 13px; color: var(--gold-light); font-weight:700; margin-bottom: 8px;">
+              📍 ${activeOrders[0].locationHeader || activeOrders[0].address}
+            </div>
+            <div class="pin-code-box">
+              <span style="font-size: 20px;">🔑</span>
+              <span class="pin-number">${activeOrders[0].verificationCode}</span>
+            </div>
+            <div class="pin-microcopy">
+              Show or share this PIN with your floor runner upon desk arrival to receive your meal.
+            </div>
+          </div>
+        ` : activePasses.length > 0 ? `
+          <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: var(--radius-md); border-left: 4px solid #C084FC; margin-bottom: 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <strong style="color:#C084FC;">Active Pass: ${activePasses[0].title}</strong>
+                <div style="font-size: 12px; color: var(--text-muted);">${activePasses[0].passId} • Ready for staff scan</div>
               </div>
-              <div style="display:flex; gap:6px;">
-                <button onclick="reorderSingleItem('${item.id}')" class="btn-reorder" title="Order Again with 1 Click">Order Again</button>
-                <button onclick="addToCart('${item.id}')" class="btn-add-cart" ${!item.isAvailable ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
-                  + Add
-                </button>
-              </div>
+              <button class="btn-primary btn-view-pass" style="width:auto; padding: 6px 12px; font-size: 12px;">View Master QR</button>
             </div>
           </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-function getTimeGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Good Morning';
-  if (hour < 17) return 'Good Afternoon';
-  return 'Good Evening';
-}
-
-function setCategory(cat) {
-  state.activeCategory = cat;
-  renderMainContent();
-}
-
-function handleSearchInput(e) {
-  state.searchQuery = e.target.value.toLowerCase();
-  renderMainContent();
-}
-
-// ----------------------------------------------------
-// ORDERS VIEW & LIVE TRACKER
-// ----------------------------------------------------
-function renderOrdersView(container) {
-  const activeOrders = state.orders.filter(o => o.status !== 'DELIVERED');
-  const pastOrders = state.orders.filter(o => o.status === 'DELIVERED');
-
-  container.innerHTML = `
-    <div class="section-header">
-      <h2 class="section-title">📦 Active Orders & Live Tracking</h2>
-    </div>
-
-    ${activeOrders.length === 0 ? `
-      <div style="background:#fff; border-radius:16px; padding:32px; text-align:center; border:1px solid var(--slate-200); margin-bottom:28px;">
-        <span style="font-size:40px;">🍲</span>
-        <h3 style="font-size:16px; font-weight:800; margin-top:12px;">No active orders right now</h3>
-        <p style="font-size:12px; color:var(--slate-500); margin-top:4px;">Browse the menu to place an office workstation delivery order.</p>
+        ` : `
+          <p style="font-size: 13px; color: var(--text-muted);">No active reservations or orders. Select <strong>STAY</strong>, <strong>EAT</strong>, or <strong>PLAY</strong> above to get started.</p>
+        `}
       </div>
-    ` : activeOrders.map(order => `
-      <div style="background:#fff; border-radius:16px; padding:24px; border:1px solid var(--slate-200); margin-bottom:24px; box-shadow:var(--card-shadow);">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--slate-100); padding-bottom:12px; margin-bottom:16px;">
-          <div>
-            <span style="font-size:11px; font-weight:800; color:var(--nnpc-green-dark); background:var(--nnpc-green-light); padding:4px 10px; border-radius:12px;">${order.id}</span>
-            <span style="font-size:12px; font-weight:700; color:var(--slate-600); margin-left:8px;">Placed at ${order.timestamp}</span>
-          </div>
-          <div style="font-size:16px; font-weight:800; color:var(--nnpc-green);">₦${order.total.toLocaleString()}</div>
-        </div>
+    `;
 
-        <!-- 4-Stage Tracker Progress Bar -->
-        <div class="tracker-progress-bar">
-          <div class="tracker-progress-step completed">
-            <div class="tracker-step-icon">📝</div>
-            <span>Received</span>
-          </div>
-          <div class="tracker-progress-step ${order.status === 'PREPARING' || order.status === 'DRIVER_ASSIGNED' || order.status === 'DELIVERED' ? 'completed' : ''}">
-            <div class="tracker-step-icon">👨‍🍳</div>
-            <span>Preparing (${order.prepTimeRemaining}m)</span>
-          </div>
-          <div class="tracker-progress-step ${order.status === 'DRIVER_ASSIGNED' || order.status === 'DELIVERED' ? 'completed' : ''}">
-            <div class="tracker-step-icon">🛵</div>
-            <span>Driver Assigned</span>
-          </div>
-          <div class="tracker-progress-step ${order.status === 'DELIVERED' ? 'completed' : ''}">
-            <div class="tracker-step-icon">🏁</div>
-            <span>Delivered</span>
-          </div>
-        </div>
+    userMainContent.innerHTML = html;
 
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px solid var(--slate-100);">
-          <div style="font-size:12px; color:var(--slate-600);">
-            <strong>Destination:</strong> ${order.deliveryBuilding} • ${order.deliveryFloor} • ${order.deliveryOffice}
-          </div>
-          <button onclick="openQRModal('${order.id}')" class="category-pill-btn" style="padding:6px 12px; font-size:11px;">📦 Show QR Pickup Code</button>
-        </div>
-      </div>
-    `).join('')}
+    // Attach Pillar Buttons Click Listeners
+    const btnPillarStay = document.getElementById('btnPillarStay');
+    const btnPillarEat = document.getElementById('btnPillarEat');
+    const btnPillarPlay = document.getElementById('btnPillarPlay');
 
-    <!-- Past Orders History -->
-    <div class="section-header" style="margin-top:36px;">
-      <h2 class="section-title">📜 Past Order History</h2>
-    </div>
+    if (btnPillarStay) btnPillarStay.addEventListener('click', () => switchUserTab('stay'));
+    if (btnPillarEat) btnPillarEat.addEventListener('click', () => switchUserTab('eat'));
+    if (btnPillarPlay) btnPillarPlay.addEventListener('click', () => switchUserTab('pass'));
 
-    ${pastOrders.map(order => `
-      <div style="background:#fff; border-radius:12px; padding:16px 20px; border:1px solid var(--slate-200); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
-        <div>
-          <div style="font-size:13px; font-weight:800; color:var(--slate-900);">${order.id} • ₦${order.total.toLocaleString()}</div>
-          <div style="font-size:11px; color:var(--slate-500); margin-top:2px;">Delivered to ${order.deliveryOffice} on ${order.timestamp}</div>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button onclick="openRatingModal('${order.items[0].id}', '${order.items[0].name}')" class="category-pill-btn" style="padding:6px 12px; font-size:11px;">⭐ Rate Meal</button>
-          <button onclick="reorderPastOrder('${order.id}')" class="btn-reorder">Order Again</button>
-        </div>
-      </div>
-    `).join('')}
-  `;
-}
+    document.querySelectorAll('.btn-view-pass').forEach(btn => {
+      btn.addEventListener('click', () => switchUserTab('pass'));
+    });
 
-// ----------------------------------------------------
-// FAVORITES VIEW
-// ----------------------------------------------------
-function renderFavoritesView(container) {
-  const favoriteItems = state.menuItems.filter(item => state.favorites.includes(item.id));
+    // Attach Carousel Indicator Click Handlers
+    document.querySelectorAll('.carousel-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        carouselSlideIndex = parseInt(dot.dataset.slide, 10);
+        const slidesContainer = document.getElementById('carouselSlides');
+        if (slidesContainer) slidesContainer.style.transform = `translateX(-${carouselSlideIndex * 33.333}%)`;
+        document.querySelectorAll('.carousel-dot').forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+      });
+    });
 
-  container.innerHTML = `
-    <div class="section-header">
-      <h2 class="section-title">❤️ Saved Favorite Meals</h2>
-    </div>
+    // Start auto advance carousel
+    if (!carouselTimer) {
+      carouselTimer = setInterval(() => {
+        carouselSlideIndex = (carouselSlideIndex + 1) % 3;
+        const slidesContainer = document.getElementById('carouselSlides');
+        if (slidesContainer) slidesContainer.style.transform = `translateX(-${carouselSlideIndex * 33.333}%)`;
+        document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+          if (i === carouselSlideIndex) d.classList.add('active');
+          else d.classList.remove('active');
+        });
+      }, 5000);
+    }
+  }
 
-    <div class="meal-grid">
-      ${favoriteItems.map(item => `
-        <div class="meal-card">
-          <div class="meal-card-image-wrap">
-            <img src="${item.image}" alt="${item.name}" class="meal-card-image">
-          </div>
-          <div class="meal-card-body">
-            <h3 class="meal-card-title">${item.name}</h3>
-            <p class="meal-card-desc">${item.description}</p>
-            <div class="meal-card-footer">
-              <span class="meal-price-subsidized">₦${item.subsidizedPrice.toLocaleString()}</span>
-              <button onclick="addToCart('${item.id}')" class="btn-add-cart">+ Add to Order</button>
-            </div>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
+  // SCREEN B: The "Eat" Portal (Food / Room Service)
+  function renderEatScreenB() {
+    const foods = store.getBranchFood();
+    const mode = store.eatFulfillmentMode; // 'delivery' | 'pickup' | 'in-room'
 
-// ----------------------------------------------------
-// WALLET VIEW
-// ----------------------------------------------------
-function renderWalletView(container) {
-  container.innerHTML = `
-    <div class="section-header">
-      <h2 class="section-title">💳 Subsidy & Personal Wallet</h2>
-    </div>
+    let html = `
+      <h2 style="font-family: var(--font-heading); font-size: 22px; color: var(--gold-light); margin-bottom: 12px;">
+        🍔 The "Eat" Portal (Food & Dining)
+      </h2>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:28px;">
-      <div style="background:linear-gradient(135deg, var(--nnpc-green) 0%, var(--nnpc-green-dark) 100%); color:#fff; padding:24px; border-radius:16px; box-shadow:0 8px 24px var(--nnpc-green-glow);">
-        <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--nnpc-gold);">NNPC Monthly Meal Subsidy</div>
-        <div style="font-size:32px; font-weight:800; margin:10px 0;">₦${state.wallet.subsidyBalance.toLocaleString()}</div>
-        <div style="font-size:11px; opacity:0.85;">Refreshes on the 1st of every month for NNPC Staff</div>
+      <!-- Fulfillment Context Selector -->
+      <div class="fulfillment-selector">
+        <button class="fulfillment-btn ${mode === 'delivery' ? 'active' : ''}" data-mode="delivery">
+          🛵 Delivery (To Address)
+        </button>
+        <button class="fulfillment-btn ${mode === 'pickup' ? 'active' : ''}" data-mode="pickup">
+          🛍️ Pick-Up (At Counter)
+        </button>
+        <button class="fulfillment-btn ${mode === 'in-room' ? 'active' : ''}" data-mode="in-room">
+          🛎️ In-Room / Poolside
+        </button>
       </div>
 
-      <div style="background:#fff; border:1px solid var(--slate-200); padding:24px; border-radius:16px; box-shadow:var(--card-shadow); display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--slate-500);">Personal Wallet Balance</div>
-          <div style="font-size:32px; font-weight:800; color:var(--slate-900); margin:10px 0;">₦${state.wallet.personalBalance.toLocaleString()}</div>
-        </div>
-        <button onclick="openWalletTopupModal()" class="btn-add-cart" style="width:fit-content; padding:10px 18px;">+ Top Up Personal Balance</button>
+      <div style="margin-bottom: 16px; background: rgba(212, 175, 55, 0.06); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-size: 13px;">
+        ${mode === 'delivery' 
+          ? '📦 Delivery Mode: Payload routed directly to Kitchen KDS with 90s acceptance window & Jarvis courier auto-dispatch.' 
+          : mode === 'pickup' 
+          ? '🛍️ Pick-Up Mode: Order prepared for counter collection. 4-digit pickup code issued.' 
+          : '🛎️ In-Room / Poolside Mode: Unlocks priority internal house runner dispatch & Room Folio billing.'}
       </div>
-    </div>
 
-    <div class="section-header">
-      <h3 class="section-title">📜 Wallet Transaction History</h3>
-    </div>
-    <div style="background:#fff; border-radius:12px; border:1px solid var(--slate-200); overflow:hidden;">
-      <div style="padding:14px 20px; border-bottom:1px solid var(--slate-100); display:flex; justify-content:space-between; font-size:12px;">
-        <span><strong>Order #ORD-9821</strong> • Special Jollof Rice Combo</span>
-        <span style="font-weight:800; color:var(--nnpc-red);">-₦1,800 (Subsidy)</span>
-      </div>
-      <div style="padding:14px 20px; border-bottom:1px solid var(--slate-100); display:flex; justify-content:space-between; font-size:12px;">
-        <span><strong>Monthly Subsidy Allocation</strong> • NNPC Allowance</span>
-        <span style="font-weight:800; color:var(--nnpc-green);">+₦20,000</span>
-      </div>
-    </div>
-  `;
-}
+      <div class="grid-container">
+    `;
 
-// ----------------------------------------------------
-// VENDOR VIEW (KDS & OPERATIONAL DASHBOARD)
-// ----------------------------------------------------
-function renderVendorView(container) {
-  const pendingOrders = state.orders.filter(o => o.status === 'RECEIVED');
-
-  container.innerHTML = `
-    <!-- High Priority Flashing Alert Banner for Incoming Orders -->
-    ${pendingOrders.length > 0 ? `
-      <div class="vendor-alert-flashing">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:22px;">🚨</span>
-          <div>
-            <div style="font-size:15px; font-weight:900;">${pendingOrders.length} NEW WORKPLACE ORDER(S) WAITING!</div>
-            <div style="font-size:11px; opacity:0.9;">Accept or Reject within kitchen preparation SLA</div>
-          </div>
-        </div>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <button onclick="toggleAudioAlert()" style="background:rgba(255,255,255,0.2); border:1px solid #fff; color:#fff; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
-            🔔 Sound: ${state.audioAlert ? 'ON' : 'MUTED'}
+    foods.forEach(f => {
+      html += `
+        <div class="card">
+          <span class="card-badge ${f.available ? (mode === 'in-room' ? 'badge-blue' : 'badge-gold') : 'badge-red'}">
+            ${f.available ? (mode === 'in-room' ? 'IN-HOUSE PRIORITY' : 'KDS LINKED') : 'OUT OF STOCK'}
+          </span>
+          <div style="font-size: 38px; margin-bottom: 8px; text-align: center;">${f.image}</div>
+          <div class="card-title">${f.name}</div>
+          <div style="font-size: 12px; color: var(--text-muted);">${f.category} • ~${f.prepTime} mins prep</div>
+          <div class="card-price">₦${f.price.toLocaleString()}</div>
+          
+          <button class="btn-primary btn-add-cart-b" data-id="${f.id}" ${!f.available ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+            ${!f.available ? 'Unavailable' : '➕ Add to Order'}
           </button>
         </div>
+      `;
+    });
+
+    html += `</div>`;
+    userMainContent.innerHTML = html;
+
+    // Attach Fulfillment Context Buttons
+    document.querySelectorAll('.fulfillment-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        store.eatFulfillmentMode = btn.dataset.mode;
+        renderEatScreenB();
+        renderUserSidePanel();
+      });
+    });
+
+    // Attach Add to Cart
+    document.querySelectorAll('.btn-add-cart-b').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const foodId = btn.dataset.id;
+        const item = foods.find(f => f.id === foodId);
+        if (item) {
+          const existing = userCart.find(c => c.id === foodId);
+          if (existing) {
+            existing.qty++;
+          } else {
+            userCart.push({ ...item, qty: 1, mode: mode === 'in-room' ? 'MODE_B' : 'MODE_A' });
+          }
+          store.notify();
+        }
+      });
+    });
+  }
+
+  // SCREEN C: The "Stay" Booking Engine
+  function renderStayScreenC() {
+    const rooms = store.getBranchRooms();
+    const activeBranch = store.branches[store.currentBranch];
+
+    let html = `
+      <div style="margin-bottom: 20px; background: rgba(16, 185, 129, 0.08); padding: 16px; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.3);">
+        <h2 style="font-family: var(--font-heading); font-size: 22px; color: #34D399;">
+          🏨 Screen C: "Stay" Booking Engine
+        </h2>
+        <p style="font-size: 13px; color: var(--text-muted);">
+          Real-time inventory matrix for ${activeBranch.name}. Locks room for 10 minutes during payment checkout.
+        </p>
       </div>
-    ` : ''}
 
-    <div class="section-header">
-      <h2 class="section-title">👨‍🍳 Kitchen Display System (KDS) - Vendor Dashboard</h2>
-      <button onclick="openVendorDishModal()" class="btn-add-cart" style="padding:10px 18px;">➕ Add New Dish / Price</button>
-    </div>
-
-    <!-- Active Kitchen Orders Queue -->
-    <div style="margin-bottom:32px;">
-      <h3 style="font-size:14px; font-weight:800; margin-bottom:14px; color:var(--slate-900);">📦 Incoming & Preparation Orders Queue</h3>
-      
-      ${state.orders.map(order => `
-        <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid var(--slate-200); margin-bottom:16px; box-shadow:var(--card-shadow);">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid var(--slate-100); padding-bottom:12px; margin-bottom:14px;">
-            <div>
-              <span class="kds-status-badge kds-status-${order.status}">${order.status}</span>
-              <span style="font-size:16px; font-weight:900; color:var(--slate-900); margin-left:8px;">${order.id} • ${order.customerName}</span>
-              <div style="font-size:12px; color:var(--slate-500); margin-top:2px;">
-                🏢 <strong>Delivery:</strong> ${order.deliveryBuilding} • ${order.deliveryFloor} • ${order.deliveryOffice}
-              </div>
-            </div>
-
-            <!-- Verification Code Display for Kitchen Staff -->
-            <div style="text-align:right;">
-              <div style="font-size:10px; font-weight:800; color:var(--slate-400); text-transform:uppercase;">Pickup Code:</div>
-              <div class="verification-code-badge">${order.qrCode.split('-')[1] || '9821'}</div>
-            </div>
-          </div>
-
-          <!-- Itemized Kitchen Checklist -->
-          <div style="margin-bottom:14px; background:var(--slate-50); padding:12px; border-radius:10px;">
-            <div style="font-size:11px; font-weight:800; color:var(--slate-500); text-transform:uppercase; margin-bottom:6px;">Items to Prepare:</div>
-            ${order.items.map(item => `
-              <div style="font-size:13px; font-weight:700; color:var(--slate-800); display:flex; justify-content:space-between;">
-                <span>• ${item.name} x${item.qty || 1}</span>
-                <span>₦${((item.subsidizedPrice || item.price) * (item.qty || 1)).toLocaleString()}</span>
-              </div>
-            `).join('')}
-          </div>
-
-          <!-- KDS Controls (Accept/Reject, Extend Time, Ready, Courier Match, Print Receipt) -->
-          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; border-top:1px solid var(--slate-100); padding-top:12px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <button onclick="openReceiptModal('${order.id}')" class="category-pill-btn" style="padding:6px 12px; font-size:11px;">🖨️ Print Receipt</button>
-              ${order.status === 'PREPARING' ? `
-                <button onclick="extendPrepTime('${order.id}', 5)" class="category-pill-btn" style="padding:6px 10px; font-size:11px;">+5m Prep</button>
-                <button onclick="extendPrepTime('${order.id}', 10)" class="category-pill-btn" style="padding:6px 10px; font-size:11px;">+10m Prep</button>
-              ` : ''}
-            </div>
-
-            <div style="display:flex; gap:8px;">
-              ${order.status === 'RECEIVED' ? `
-                <button onclick="openVendorRejectModal('${order.id}')" style="background:var(--nnpc-red-light); color:var(--nnpc-red); border:1px solid rgba(217,0,12,0.3); padding:8px 14px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer;">
-                  Reject Order
-                </button>
-                <button onclick="advanceOrderStatus('${order.id}', 'PREPARING')" class="btn-add-cart" style="padding:8px 16px;">
-                  ✅ Accept Order (Start Cooking)
-                </button>
-              ` : ''}
-
-              ${order.status === 'PREPARING' ? `
-                <button onclick="advanceOrderStatus('${order.id}', 'DRIVER_ASSIGNED')" class="btn-add-cart" style="padding:8px 16px; background:linear-gradient(135deg, var(--nnpc-gold-dark) 0%, var(--nnpc-gold) 100%); color:var(--slate-900);">
-                  🛍️ Mark Bag Sealed & Ready for Courier
-                </button>
-              ` : ''}
-
-              ${order.status === 'DRIVER_ASSIGNED' ? `
-                <div style="font-size:12px; font-weight:800; color:var(--nnpc-green-dark); background:var(--nnpc-green-light); padding:6px 12px; border-radius:8px;">
-                  🛵 Matched: Courier Musa Garba (ETA ~3m)
-                </div>
-                <button onclick="advanceOrderStatus('${order.id}', 'DELIVERED')" class="btn-add-cart" style="padding:8px 14px;">
-                  🤝 Handed to Courier
-                </button>
-              ` : ''}
-            </div>
-          </div>
+      <!-- Date & Branch Selection Input Bar -->
+      <div style="background: var(--bg-card); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+        <div>
+          <label class="form-label">Branch Location</label>
+          <div style="font-weight:700; color:var(--gold-light); font-size: 14px;">${activeBranch.name}</div>
         </div>
-      `).join('')}
-    </div>
+        <div>
+          <label class="form-label">Check-In Date</label>
+          <input type="date" class="form-input" value="2026-08-05">
+        </div>
+        <div>
+          <label class="form-label">Check-Out Date</label>
+          <input type="date" class="form-input" value="2026-08-07">
+        </div>
+        <div>
+          <label class="form-label">Guests</label>
+          <select class="form-input">
+            <option>1 Guest</option>
+            <option selected>2 Guests</option>
+            <option>Family (4+)</option>
+          </select>
+        </div>
+      </div>
 
-    <!-- Vendor Menu Items Management Table -->
-    <div style="background:#fff; border-radius:16px; padding:20px; border:1px solid var(--slate-200); margin-bottom:28px; box-shadow:var(--card-shadow);">
-      <h3 style="font-size:14px; font-weight:800; margin-bottom:14px; color:var(--slate-900);">🍲 Cafeteria Menu Items & Pricing</h3>
-      
-      <div style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:12px;">
+      <div class="grid-container">
+    `;
+
+    rooms.forEach(rm => {
+      const isAvailable = rm.status === 'available';
+      const isLocked = rm.status === 'locked';
+
+      html += `
+        <div class="card">
+          <span class="card-badge ${isAvailable ? 'badge-green' : isLocked ? 'badge-gold' : 'badge-red'}">
+            ${isAvailable ? 'AVAILABLE' : isLocked ? '10-MIN LOCK' : 'RESERVED'}
+          </span>
+          <div style="font-size: 32px; margin-bottom: 6px;">🛌</div>
+          <div class="card-title">${rm.type} (${rm.roomNo})</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+            ${rm.features.join(' • ')}
+          </div>
+          <div class="card-price">₦${rm.price.toLocaleString()} <span style="font-size: 12px; font-weight:400; color:var(--text-muted);">/ night</span></div>
+          
+          ${isAvailable ? `
+            <button class="btn-primary btn-lock-room-c" data-id="${rm.id}">
+              🔒 Book Now (10-Min Hold Lock)
+            </button>
+          ` : isLocked ? `
+            <div style="text-align: center;">
+              <div style="font-size: 12px; color: var(--gold-light); margin-bottom: 6px; font-weight:700;">Inventory Locked (10m countdown)</div>
+              <button class="btn-primary btn-confirm-room-c" data-id="${rm.id}">
+                💳 Confirm & Issue Digital Booking Code
+              </button>
+            </div>
+          ` : `
+            <button class="btn-secondary" disabled style="opacity:0.5; cursor:not-allowed;">Booked by ${rm.bookedBy || 'Guest'}</button>
+          `}
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+    userMainContent.innerHTML = html;
+
+    // Attach Handlers
+    document.querySelectorAll('.btn-lock-room-c').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (store.lockRoomForBooking(btn.dataset.id)) {
+          alert('Room inventory locked for 10 minutes! Complete payment to issue digital booking code.');
+        }
+      });
+    });
+
+    document.querySelectorAll('.btn-confirm-room-c').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const guestName = prompt('Enter Guest Full Name:', 'Alhaji Umar Hassan');
+        if (guestName) {
+          const booking = store.confirmRoomBooking(btn.dataset.id, guestName);
+          if (booking) {
+            alert(`🎉 Booking Confirmed! Digital check-in QR issued. Ref: ${booking.bookingCode}`);
+          }
+        }
+      });
+    });
+  }
+
+  // SCREEN D: "Your City Star Pass" (Facility / Recreation / Account Hub)
+  function renderPassScreenD() {
+    const passes = store.userPasses.filter(p => p.branch === store.currentBranch);
+    const orders = store.getBranchOrders();
+    const catalogPasses = store.getBranchPasses();
+
+    let html = `
+      <h2 style="font-family: var(--font-heading); font-size: 22px; color: #C084FC; margin-bottom: 14px;">
+        🎟️ Screen D: "Your City Star Pass" & Digital Access Hub
+      </h2>
+
+      <!-- Master Dynamic QR Pass Card -->
+      <div class="card" style="margin-bottom: 24px; text-align: center;">
+        <span class="card-badge badge-purple" style="position:static; display:inline-block; margin-bottom: 8px;">MASTER DIGITAL ACCESS PASS</span>
+        <h3 style="font-family: var(--font-heading); font-size: 20px; color: var(--gold-light);">
+          Encrypted Dynamic Access Token
+        </h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          Present this 60-second refreshing QR code at Front Desk, Gym, or Swimming Pool entrance.
+        </p>
+
+        <div class="qr-container" style="max-width: 320px; margin: 0 auto;">
+          <div class="qr-box">
+            <svg viewBox="0 0 100 100" fill="none">
+              <rect width="100" height="100" fill="#FFFFFF"/>
+              <rect x="10" y="10" width="30" height="30" fill="#000"/>
+              <rect x="15" y="15" width="20" height="20" fill="#FFF"/>
+              <rect x="20" y="20" width="10" height="10" fill="#000"/>
+              <rect x="60" y="10" width="30" height="30" fill="#000"/>
+              <rect x="65" y="15" width="20" height="20" fill="#FFF"/>
+              <rect x="70" y="20" width="10" height="10" fill="#000"/>
+              <rect x="10" y="60" width="30" height="30" fill="#000"/>
+              <rect x="15" y="65" width="20" height="20" fill="#FFF"/>
+              <rect x="20" y="70" width="10" height="10" fill="#000"/>
+              <rect x="45" y="10" width="10" height="20" fill="#000"/>
+              <rect x="45" y="40" width="20" height="10" fill="#000"/>
+              <rect x="70" y="50" width="20" height="20" fill="#000"/>
+              <rect x="50" y="70" width="30" height="20" fill="#000"/>
+            </svg>
+          </div>
+          
+          ${passes.length > 0 ? `
+            <div class="timer-ring">
+              ⏳ Dynamic Refresh in: ${store.getDynamicQRData(passes[0].passId).secondsRemaining}s
+            </div>
+            <div class="progress-bar-container" style="width: 190px;">
+              <div class="progress-bar-fill" style="width: ${(store.getDynamicQRData(passes[0].passId).secondsRemaining / 60) * 100}%;"></div>
+            </div>
+            <div style="font-size: 10px; color: var(--text-muted); margin-top: 8px; font-family: monospace;">
+              ${store.getDynamicQRData(passes[0].passId).payload}
+            </div>
+          ` : `
+            <div style="font-size: 12px; color: var(--color-warning); margin-top: 10px;">No Active Facility Pass. Purchase below.</div>
+          `}
+        </div>
+      </div>
+
+      <!-- Available Facility Passes Catalog -->
+      <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--gold-light); margin-bottom: 12px;">
+        🏊 Purchase Facility Pass ("PLAY")
+      </h3>
+      <div class="grid-container" style="margin-bottom: 28px;">
+    `;
+
+    catalogPasses.forEach(p => {
+      html += `
+        <div class="card">
+          <span class="card-badge badge-purple">${p.type} ACCESS</span>
+          <div class="card-title">${p.title}</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">${p.description}</div>
+          <div class="card-price">₦${p.price.toLocaleString()}</div>
+          <button class="btn-primary btn-buy-pass-d" data-id="${p.id}">Purchase Access Pass</button>
+        </div>
+      `;
+    });
+
+    html += `
+      </div>
+
+      <!-- Unified Activity & Bookings History Ledger -->
+      <h3 style="font-family: var(--font-heading); font-size: 16px; color: var(--gold-light); margin-bottom: 12px;">
+        📋 Unified Activity & Orders History
+      </h3>
+      <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow-x: auto;">
+        <table class="custom-table">
           <thead>
-            <tr style="border-bottom:2px solid var(--slate-200); color:var(--slate-500); text-transform:uppercase; font-size:10px; font-weight:800;">
-              <th style="padding:10px;">Dish</th>
-              <th style="padding:10px;">Category</th>
-              <th style="padding:10px;">Standard Price</th>
-              <th style="padding:10px;">Subsidized Price</th>
-              <th style="padding:10px;">Status</th>
-              <th style="padding:10px; text-align:right;">Actions</th>
+            <tr>
+              <th>Ref ID</th>
+              <th>Type / Mode</th>
+              <th>Details</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Verification Code</th>
             </tr>
           </thead>
           <tbody>
-            ${state.menuItems.map(item => `
-              <tr style="border-bottom:1px solid var(--slate-100);">
-                <td style="padding:12px 10px; font-weight:800; color:var(--slate-900);">
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    <img src="${item.image}" alt="${item.name}" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
-                    <div>
-                      <div>${item.name}</div>
-                      <div style="font-size:10px; color:var(--slate-400); font-weight:600;">Prep: ${item.prepTime}m • Stock: ${item.stock}</div>
-                    </div>
-                  </div>
-                </td>
-                <td style="padding:10px; font-weight:600; color:var(--slate-600);">${item.category.replace('_', ' ')}</td>
-                <td style="padding:10px; font-weight:700; color:var(--slate-500); text-decoration:line-through;">₦${item.price.toLocaleString()}</td>
-                <td style="padding:10px; font-weight:800; color:var(--nnpc-green);">₦${item.subsidizedPrice.toLocaleString()}</td>
-                <td style="padding:10px;">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <label class="toggle-switch">
-                      <input type="checkbox" ${item.isAvailable ? 'checked' : ''} onchange="toggleMealAvailability('${item.id}')">
-                      <span class="toggle-slider"></span>
-                    </label>
-                    <span style="font-size:11px; font-weight:700; color:${item.isAvailable ? 'var(--nnpc-green)' : 'var(--nnpc-red)'};">
-                      ${item.isAvailable ? 'Available' : 'Sold Out'}
-                    </span>
-                  </div>
-                </td>
-                <td style="padding:10px; text-align:right;">
-                  <button onclick="openVendorDishModal('${item.id}')" class="category-pill-btn" style="padding:4px 10px; font-size:11px; display:inline-flex;">✏️ Edit</button>
-                  <button onclick="deleteVendorDish('${item.id}')" style="background:var(--nnpc-red-light); color:var(--nnpc-red); border:1px solid rgba(217,0,12,0.2); padding:4px 10px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer; margin-left:4px;">🗑️ Delete</button>
-                </td>
-              </tr>
-            `).join('')}
+    `;
+
+    orders.forEach(o => {
+      html += `
+        <tr>
+          <td style="font-weight:700; color:var(--gold-light);">${o.id}</td>
+          <td>${o.mode}</td>
+          <td>${o.items.map(i=>i.name).join(', ')}</td>
+          <td>₦${o.total.toLocaleString()}</td>
+          <td><span class="card-badge badge-gold" style="position:static;">${o.status}</span></td>
+          <td><div class="code-box" style="font-size: 14px; padding: 2px 6px;">${o.verificationCode}</div></td>
+        </tr>
+      `;
+    });
+
+    html += `
           </tbody>
         </table>
       </div>
-    </div>
-  `;
-}
+    `;
 
-// ----------------------------------------------------
-// COURIER / DRIVER VIEW (4TH INTERFACE LOGISTICS SYSTEM)
-// ----------------------------------------------------
-function renderCourierView(container) {
-  const courierObj = MOCK_DATA.users.COURIER;
+    userMainContent.innerHTML = html;
 
-  container.innerHTML = `
-    <!-- Rider Top Stats Header -->
-    <div style="background:var(--slate-900); color:#fff; border-radius:20px; padding:24px; margin-bottom:28px; display:flex; justify-content:space-between; align-items:center;">
-      <div>
-        <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--nnpc-gold);">NNPC Express Courier Hub</div>
-        <div style="font-size:24px; font-weight:900; margin-top:2px;">${courierObj.name}</div>
-        <div style="font-size:12px; color:var(--slate-400); margin-top:2px;">🛵 ${courierObj.vehicle} • Rating ⭐ ${courierObj.rating}</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:11px; text-transform:uppercase; color:var(--slate-400);">Today's Earnings</div>
-        <div style="font-size:28px; font-weight:900; color:var(--nnpc-gold);">₦${courierObj.earningsToday.toLocaleString()}</div>
-        <div style="font-size:11px; color:var(--nnpc-green); font-weight:700;">${courierObj.completedDeliveriesToday} Completed Orders</div>
-      </div>
-    </div>
+    // Attach Buy Pass Handler
+    document.querySelectorAll('.btn-buy-pass-d').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pass = store.purchasePass(btn.dataset.id);
+        if (pass) {
+          alert(`🎉 Pass Purchased! Dynamic QR code generated.`);
+          renderPassScreenD();
+        }
+      });
+    });
+  }
 
-    <!-- Active Courier Dispatch Card -->
-    <div class="section-header">
-      <h2 class="section-title">⚡ Live Dispatch & Order Hand-off</h2>
-    </div>
+  // Switch User Tab Helper
+  function switchUserTab(tabName) {
+    store.setUserTab(tabName);
+    appTabButtons.forEach(b => {
+      if (b.dataset.usertab === tabName) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+  }
 
-    <div class="courier-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--slate-100); padding-bottom:14px; margin-bottom:16px;">
-        <div>
-          <span style="font-size:11px; font-weight:900; background:var(--nnpc-gold); color:var(--slate-900); padding:4px 10px; border-radius:6px;">NEW DISPATCH ALERT</span>
-          <h3 style="font-size:18px; font-weight:900; color:var(--slate-900); margin-top:6px;">Order #ORD-9821</h3>
+  // Render User Side Panel (Cart & Checkout)
+  function renderUserSidePanel() {
+    if (userCart.length === 0) {
+      const activeOrders = store.getBranchOrders().filter(o => o.status !== 'DELIVERED' && o.status !== 'CANCELLED');
+      if (activeOrders.length > 0) {
+        const ord = activeOrders[0];
+        sidePanelContent.innerHTML = `
+          <div class="pin-tracker-banner">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+              <span class="pin-badge-header">⚡ ORDER #${ord.id} TRACKER</span>
+              <span class="card-badge badge-gold" style="position:static;">${ord.status}</span>
+            </div>
+            <div style="font-size: 12px; color: var(--gold-light); font-weight:700; margin-bottom: 10px;">
+              📍 ${ord.locationHeader || ord.address}
+            </div>
+            <div class="pin-code-box">
+              <span style="font-size: 20px;">🔑</span>
+              <span class="pin-number">${ord.verificationCode}</span>
+            </div>
+            <div class="pin-microcopy">
+              Show or share this PIN with your floor runner upon desk arrival to receive your meal.
+            </div>
+          </div>
+
+          <div style="background: var(--bg-card); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Recipient: <strong style="color:var(--text-main);">${ord.recipientName || ord.customerName}</strong></div>
+            <div style="font-size: 12px; color: var(--text-muted);">Assigned Runner: <strong style="color:var(--gold-light);">${ord.driverAssigned || ord.houseStaffAssigned || 'Jarvis Runner'}</strong></div>
+          </div>
+        `;
+        return;
+      }
+
+      sidePanelContent.innerHTML = `
+        <div style="text-align: center; padding: 30px 10px; color: var(--text-muted);">
+          <div style="font-size: 32px; margin-bottom: 8px;">🛒</div>
+          <p style="font-size: 14px;">Your Cart is Empty</p>
+          <p style="font-size: 12px; margin-top: 4px;">Select <strong>EAT</strong> to add items to your cart.</p>
         </div>
-        <div style="text-align:right;">
-          <div style="font-size:20px; font-weight:900; color:var(--nnpc-green);">₦1,200 Fee</div>
-          <div style="font-size:11px; color:var(--slate-500);">Est. Transit: ~8 Mins</div>
-        </div>
+      `;
+      return;
+    }
+
+    const total = userCart.reduce((sum, i) => sum + i.price * i.qty, 0);
+    const fulfillmentMode = store.eatFulfillmentMode; // 'delivery' | 'pickup' | 'in-room'
+
+    let html = `
+      <div style="margin-bottom: 12px;">
+        <span class="card-badge ${fulfillmentMode === 'in-room' ? 'badge-blue' : 'badge-gold'}" style="position:static;">
+          ${fulfillmentMode === 'in-room' ? 'IN-ROOM / POOLSIDE' : fulfillmentMode === 'pickup' ? 'COUNTER PICK-UP' : 'DESK / TOWER DELIVERY'}
+        </span>
       </div>
 
-      <!-- Pickup & Drop-Off Routing Details -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
-        <div style="background:var(--slate-50); padding:14px; border-radius:12px; border:1px solid var(--slate-200);">
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:var(--slate-500);">1. Merchant Pickup:</div>
-          <div style="font-size:13px; font-weight:800; color:var(--slate-900); margin-top:2px;">NNPC Towers Main Cafeteria</div>
-          <div style="font-size:11px; color:var(--slate-500);">Ground Floor, Block A • Counter 2</div>
-          <div style="margin-top:8px;">
-            <span style="font-size:10px; font-weight:800; color:var(--slate-400);">PRESENCE CODE:</span>
-            <span class="verification-code-badge" style="font-size:16px; padding:2px 8px; margin-left:4px;">9821</span>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+    `;
+
+    userCart.forEach((ci, idx) => {
+      html += `
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: var(--radius-sm);">
+          <div>
+            <div style="font-size: 13px; font-weight:600;">${ci.name}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">₦${ci.price.toLocaleString()} x ${ci.qty}</div>
+          </div>
+          <button class="btn-remove-cart" data-idx="${idx}" style="background:none; border:none; color: var(--color-danger); cursor:pointer; font-size: 14px;">✕</button>
+        </div>
+      `;
+    });
+
+    html += `
+      </div>
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: 12px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight:800; color: var(--gold-light);">
+          <span>Total Payable:</span>
+          <span>₦${total.toLocaleString()}</span>
+        </div>
+      </div>
+    `;
+
+    if (fulfillmentMode === 'pickup') {
+      html += `
+        <div class="form-group">
+          <label class="form-label">Pickup Branch Counter</label>
+          <div style="font-weight:700; color:var(--gold-light); font-size: 13px;">${store.branches[store.currentBranch].name} Counter</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Recipient Name</label>
+          <input type="text" id="inputRecipientName" class="form-input" placeholder="e.g., Mr. Musa Ibrahim" value="Mr. Musa Ibrahim">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="text" id="inputPhone" class="form-input" value="+234 803 123 4567">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <select id="inputPaymentMethod" class="form-input">
+            <option value="Wallet">City Star Wallet (₦${store.userWallet.toLocaleString()})</option>
+          </select>
+        </div>
+      `;
+    } else {
+      html += `
+        <div class="form-group">
+          <label class="form-label">Tower Dropdown</label>
+          <select id="inputTower" class="form-input">
+            <option value="Tower A">Tower A</option>
+            <option value="Tower B" selected>Tower B</option>
+            <option value="Tower C">Tower C</option>
+            <option value="Tower D">Tower D</option>
+            <option value="Core Block">Core Block</option>
+            <option value="Annex">Annex</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Floor Level Dropdown</label>
+          <select id="inputFloor" class="form-input">
+            <option value="Ground Floor">Ground Floor</option>
+            <option value="Floor 1">Floor 1</option>
+            <option value="Floor 2">Floor 2</option>
+            <option value="Floor 3">Floor 3</option>
+            <option value="Floor 4" selected>Floor 4</option>
+            <option value="Floor 5">Floor 5</option>
+            <option value="Floor 6">Floor 6</option>
+            <option value="Floor 7">Floor 7</option>
+            <option value="Floor 8">Floor 8</option>
+            <option value="Floor 9">Floor 9</option>
+            <option value="Floor 10">Floor 10</option>
+            <option value="Floor 11">Floor 11</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Block / Wing Selector</label>
+          <select id="inputBlockWing" class="form-input">
+            <option value="Block A">Block A</option>
+            <option value="Block B">Block B</option>
+            <option value="Block C" selected>Block C</option>
+            <option value="Block D">Block D</option>
+            <option value="East Wing">East Wing</option>
+            <option value="West Wing">West Wing</option>
+            <option value="Central Corridor">Central Corridor</option>
+            <option value="Open Hub">Open Hub</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Desk ID / Room Number</label>
+          <input type="text" id="inputDeskRoom" class="form-input" placeholder="e.g., Desk A-304 or Office 412" value="Desk A-304">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Recipient Name</label>
+          <input type="text" id="inputRecipientName" class="form-input" placeholder="e.g., Mr. Musa Ibrahim" value="Mr. Musa Ibrahim">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="text" id="inputPhone" class="form-input" value="+234 803 123 4567">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <select id="inputPaymentMethod" class="form-input">
+            <option value="Wallet">City Star Wallet (₦${store.userWallet.toLocaleString()})</option>
+            <option value="Room Folio">Charge to Guest Room Folio</option>
+          </select>
+        </div>
+      `;
+    }
+
+    html += `
+      <button id="btnPlaceOrder" class="btn-primary" style="margin-top: 8px;">
+        ⚡ Confirm & Dispatch Order
+      </button>
+    `;
+
+    sidePanelContent.innerHTML = html;
+
+    // Attach Cart Remove Buttons
+    document.querySelectorAll('.btn-remove-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        userCart.splice(idx, 1);
+        store.notify();
+      });
+    });
+
+    // Attach Place Order Handler
+    const btnPlaceOrder = document.getElementById('btnPlaceOrder');
+    if (btnPlaceOrder) {
+      btnPlaceOrder.addEventListener('click', () => {
+        const tower = document.getElementById('inputTower') ? document.getElementById('inputTower').value : 'Tower B';
+        const floor = document.getElementById('inputFloor') ? document.getElementById('inputFloor').value : 'Floor 4';
+        const blockWing = document.getElementById('inputBlockWing') ? document.getElementById('inputBlockWing').value : 'Block C';
+        const deskRoom = document.getElementById('inputDeskRoom') ? document.getElementById('inputDeskRoom').value : 'Desk A-304';
+        const recipientName = document.getElementById('inputRecipientName') ? document.getElementById('inputRecipientName').value : 'Mr. Musa Ibrahim';
+        const phone = document.getElementById('inputPhone') ? document.getElementById('inputPhone').value : '+234 803 123 4567';
+        const paymentMethod = document.getElementById('inputPaymentMethod').value;
+        const mode = fulfillmentMode === 'in-room' ? 'MODE_B' : 'MODE_A';
+        const locationHeader = `${tower.toUpperCase()} ➔ ${floor.toUpperCase()} ➔ ${blockWing.toUpperCase()} ➔ ${deskRoom.toUpperCase()}`;
+
+        const newOrder = store.placeFoodOrder(userCart, mode, {
+          tower,
+          floor,
+          blockWing,
+          deskRoom,
+          recipientName,
+          customerName: recipientName,
+          locationHeader,
+          phone,
+          paymentMethod
+        });
+
+        if (newOrder) {
+          userCart = [];
+          alert(`🚀 Order ${newOrder.id} Dispatched!\nLocation: ${newOrder.locationHeader}\nVerification Code: ${newOrder.verificationCode}`);
+          switchUserTab('pass');
+        }
+      });
+    }
+  }
+
+  // ==================== MERCHANT PORTAL RENDERER ====================
+  function renderMerchantPortal() {
+    if (!merchantMainContent) return;
+
+    if (merchantSubTab === 'kitchen') {
+      renderKitchenKDSView();
+    } else if (merchantSubTab === 'ledger') {
+      renderFrontDeskLedgerView();
+    } else if (merchantSubTab === 'scanner') {
+      renderGymPoolScannerView();
+    }
+  }
+
+  // Merchant Sub-View 1: Kitchen KDS
+  function renderKitchenKDSView() {
+    const orders = store.getBranchOrders();
+
+    let html = `
+      <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--gold-light);">
+          🍳 Kitchen Display System (KDS) - ${store.branches[store.currentBranch].name}
+        </h3>
+        <span style="font-size: 13px; color: var(--text-muted);">90s Acceptance Window Timer Active</span>
+      </div>
+
+      <div class="kds-grid">
+    `;
+
+    if (orders.length === 0) {
+      html += `<div style="padding: 20px; color: var(--text-muted);">No active kitchen orders for this branch.</div>`;
+    } else {
+      orders.forEach(ord => {
+        const isInHouse = ord.mode === 'MODE_B';
+        const elapsedMins = (Date.now() - ord.acceptedAt) / (1000 * 60);
+        const isBreached = elapsedMins > (ord.targetPrepMinutes + 5);
+
+        html += `
+          <div class="kds-card ${isInHouse ? 'in-house' : ''} ${isBreached ? 'sla-breach' : ''}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="card-badge ${isInHouse ? 'badge-blue' : 'badge-gold'}" style="position:static;">
+                  ${isInHouse ? 'PRIORITY IN-HOUSE' : 'EXTERNAL DELIVERY'}
+                </span>
+                <h4 style="font-family: var(--font-heading); font-size: 18px; margin-top: 6px;">#${ord.id}</h4>
+              </div>
+
+              <div class="timer-badge ${isBreached ? 'breached' : ''}">
+                ⏳ ${ord.status === 'ACCEPTED' ? `${ord.acceptanceCountdown}s Accept` : `${Math.floor(elapsedMins)}m / ${ord.targetPrepMinutes}m`}
+              </div>
+            </div>
+
+            <div style="font-size: 13px; font-weight:700; margin-bottom: 6px;">
+              Target: ${ord.customerName} ${ord.roomNo ? `(${ord.roomNo})` : ''}
+            </div>
+
+            <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 12px; font-size: 13px;">
+              ${ord.items.map(i => `
+                <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                  <span>${i.qty}x ${i.name}</span>
+                  <button class="btn-flag-oos" data-ord="${ord.id}" data-item="${i.id}" style="background:none; border:1px solid rgba(239,68,68,0.4); color:#FCA5A5; font-size:10px; padding: 2px 6px; border-radius:4px; cursor:pointer;">
+                    Flag Out of Stock
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              ${ord.status === 'ACCEPTED' ? `
+                <button class="btn-primary btn-kds-cook" data-id="${ord.id}">
+                  🔥 Accept & Start Cooking
+                </button>
+              ` : ord.status === 'COOKING' ? `
+                <button class="btn-primary btn-kds-ready" data-id="${ord.id}" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+                  ✓ Mark Ready for Pickup
+                </button>
+              ` : `
+                <button class="btn-secondary" disabled style="opacity:0.7;">Status: ${ord.status}</button>
+              `}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    html += `</div>`;
+    merchantMainContent.innerHTML = html;
+
+    // Attach KDS Action Handlers
+    document.querySelectorAll('.btn-kds-cook').forEach(btn => {
+      btn.addEventListener('click', () => store.updateOrderStatus(btn.dataset.id, 'COOKING'));
+    });
+
+    document.querySelectorAll('.btn-kds-ready').forEach(btn => {
+      btn.addEventListener('click', () => store.updateOrderStatus(btn.dataset.id, 'READY_PICKUP'));
+    });
+
+    document.querySelectorAll('.btn-flag-oos').forEach(btn => {
+      btn.addEventListener('click', () => store.flagItemOutOfStock(btn.dataset.ord, btn.dataset.item));
+    });
+  }
+
+  // Merchant Sub-View 2: Front Desk Ledger
+  function renderFrontDeskLedgerView() {
+    const rooms = store.getBranchRooms();
+
+    let html = `
+      <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--gold-light); margin-bottom: 16px;">
+        🏨 Hotel Front Desk Ledger - ${store.branches[store.currentBranch].name}
+      </h3>
+
+      <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow-x: auto;">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Room No</th>
+              <th>Suite Type</th>
+              <th>Nightly Rate</th>
+              <th>Current Status</th>
+              <th>Guest Name</th>
+              <th>Lock Timer / Ref</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+
+    rooms.forEach(rm => {
+      html += `
+        <tr>
+          <td style="font-weight: 700; color: var(--gold-light);">${rm.roomNo}</td>
+          <td>${rm.type}</td>
+          <td>₦${rm.price.toLocaleString()}</td>
+          <td>
+            <span class="card-badge ${rm.status === 'available' ? 'badge-green' : rm.status === 'locked' ? 'badge-gold' : 'badge-red'}" style="position:static;">
+              ${rm.status.toUpperCase()}
+            </span>
+          </td>
+          <td>${rm.bookedBy || 'Unoccupied'}</td>
+          <td style="font-family: monospace; font-size: 12px;">
+            ${rm.bookingCode || (rm.lockedUntil ? '10m Hold Lock' : '—')}
+          </td>
+        </tr>
+      `;
+    });
+
+    html += `
+          </tbody>
+        </table>
+      </div>
+    `;
+    merchantMainContent.innerHTML = html;
+  }
+
+  // Merchant Sub-View 3: Gym & Pool Scanner Interface
+  function renderGymPoolScannerView() {
+    let html = `
+      <div style="max-width: 650px; margin: 0 auto;">
+        <h3 style="font-family: var(--font-heading); font-size: 18px; color: #C084FC; text-align: center; margin-bottom: 16px;">
+          🏊 Recreation Facility Access Scanner Counter (Terminal: ${store.branches[store.currentBranch].name})
+        </h3>
+
+        <div class="scanner-box">
+          <div class="scan-viewfinder">
+            <div class="scan-laser"></div>
+            <span style="font-size: 54px; opacity:0.8;">📱</span>
+          </div>
+
+          <div style="font-size: 13px; color: var(--text-muted);">
+            Point optical scanner at customer dynamic 60s refreshing QR code. Evaluation loop executes in &lt;300ms.
+          </div>
+
+          <div style="width: 100%;">
+            <input type="text" id="scanPayloadInput" class="form-input" placeholder="Paste or Type QR Payload Signature..." style="font-family: monospace; font-size: 12px; margin-bottom: 10px;">
+            <button id="btnSimulateScan" class="btn-primary">
+              🔍 Scan & Validate QR Access Code (&lt;300ms Evaluation)
+            </button>
           </div>
         </div>
 
-        <div style="background:var(--nnpc-green-light); padding:14px; border-radius:12px; border:1px solid rgba(0,102,51,0.2);">
-          <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:var(--nnpc-green-dark);">2. Customer Hand-off:</div>
-          <div style="font-size:13px; font-weight:800; color:var(--nnpc-green-dark); margin-top:2px;">Engr. Babatunde Lawal</div>
-          <div style="font-size:12px; font-weight:800; color:var(--slate-900);">NNPC HQ Tower A • Floor 7 • Office 712</div>
-          <div style="font-size:11px; color:var(--slate-500); margin-top:4px;">📝 Note: "Leave on workstation desk 712"</div>
-        </div>
-      </div>
-
-      <!-- Itemized Courier Verification Checklist -->
-      <div style="margin-bottom:20px; background:#fff; border:1px solid var(--slate-200); padding:14px; border-radius:12px;">
-        <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--slate-500); margin-bottom:8px;">Pickup Checklist Verification:</div>
-        <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; margin-bottom:6px;">
-          <input type="checkbox" checked style="width:16px; height:16px;"> NNPC Special Jollof Rice Combo (x1)
-        </label>
-        <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; margin-bottom:6px;">
-          <input type="checkbox" checked style="width:16px; height:16px;"> Classic NNPC Meat Pie & Ice-Cold Maltina (x1)
-        </label>
-        <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700;">
-          <input type="checkbox" checked style="width:16px; height:16px;"> Sealed Thermal Bag & Cutlery Pack
-        </label>
-      </div>
-
-      <!-- Action Buttons -->
-      <div style="display:grid; grid-template-columns:1fr 2fr; gap:12px;">
-        <button onclick="showToast('Dispatch job declined.')" class="courier-btn-large courier-btn-decline">
-          Decline Job (24s)
-        </button>
-        <button onclick="openCourierProofModal('ORD-9821')" class="courier-btn-large courier-btn-accept">
-          🛵 Arrived at Office Floor / Confirm Drop-Off
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-// ----------------------------------------------------
-// SUPER ADMIN VIEW
-// ----------------------------------------------------
-function renderAdminView(container) {
-  container.innerHTML = `
-    <div class="section-header">
-      <h2 class="section-title">👑 Super Admin Platform Analytics</h2>
-    </div>
-
-    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:28px;">
-      <div style="background:#fff; padding:20px; border-radius:14px; border:1px solid var(--slate-200);">
-        <div style="font-size:11px; font-weight:700; color:var(--slate-500); text-transform:uppercase;">Today's Orders</div>
-        <div style="font-size:26px; font-weight:800; color:var(--nnpc-green); margin-top:4px;">148 Orders</div>
-      </div>
-      <div style="background:#fff; padding:20px; border-radius:14px; border:1px solid var(--slate-200);">
-        <div style="font-size:11px; font-weight:700; color:var(--slate-500); text-transform:uppercase;">Today's Revenue</div>
-        <div style="font-size:26px; font-weight:800; color:var(--slate-900); margin-top:4px;">₦342,500</div>
-      </div>
-      <div style="background:#fff; padding:20px; border-radius:14px; border:1px solid var(--slate-200);">
-        <div style="font-size:11px; font-weight:700; color:var(--slate-500); text-transform:uppercase;">Peak Lunch Time</div>
-        <div style="font-size:26px; font-weight:800; color:var(--nnpc-gold-dark); margin-top:4px;">12:30 PM</div>
-      </div>
-      <div style="background:#fff; padding:20px; border-radius:14px; border:1px solid var(--slate-200);">
-        <div style="font-size:11px; font-weight:700; color:var(--slate-500); text-transform:uppercase;">Avg Delivery Time</div>
-        <div style="font-size:26px; font-weight:800; color:var(--nnpc-green-dark); margin-top:4px;">14 Mins</div>
-      </div>
-    </div>
-  `;
-}
-
-// ----------------------------------------------------
-// ACTIONS & MODALS
-// ----------------------------------------------------
-function addToCart(itemId) {
-  const item = state.menuItems.find(i => i.id === itemId);
-  if (!item) return;
-
-  const existing = state.cart.find(c => c.id === itemId);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    state.cart.push({ ...item, qty: 1 });
-  }
-
-  updateCartBadge();
-  showToast(`Added ${item.name} to cart!`);
-}
-
-function updateCartBadge() {
-  const totalQty = state.cart.reduce((sum, item) => sum + item.qty, 0);
-  const badge = document.getElementById('cart-badge-count');
-  badge.innerText = totalQty;
-  badge.style.display = totalQty > 0 ? 'flex' : 'none';
-}
-
-function toggleCartDrawer() {
-  const drawer = document.getElementById('cart-drawer');
-  const isOpen = drawer.style.right === '0px';
-  drawer.style.right = isOpen ? '-420px' : '0px';
-  if (!isOpen) renderCartItems();
-}
-
-function renderCartItems() {
-  const container = document.getElementById('cart-items-container');
-  const subtotalElem = document.getElementById('cart-subtotal');
-
-  if (state.cart.length === 0) {
-    container.innerHTML = `
-      <div style="text-align:center; padding:40px 0; color:var(--slate-400);">
-        <span style="font-size:40px;">🛒</span>
-        <p style="font-size:13px; font-weight:600; margin-top:10px;">Your cart is empty</p>
+        <div id="scanResultContainer"></div>
       </div>
     `;
-    subtotalElem.innerText = '₦0';
-    return;
+
+    merchantMainContent.innerHTML = html;
+
+    const btnSimulateScan = document.getElementById('btnSimulateScan');
+    const scanPayloadInput = document.getElementById('scanPayloadInput');
+    const scanResultContainer = document.getElementById('scanResultContainer');
+
+    if (store.userPasses.length > 0) {
+      const activePass = store.userPasses[0];
+      const qrData = store.getDynamicQRData(activePass.passId);
+      scanPayloadInput.value = qrData.payload;
+    }
+
+    if (btnSimulateScan) {
+      btnSimulateScan.addEventListener('click', () => {
+        const payload = scanPayloadInput.value.trim();
+        const res = store.validateStaffQR(payload);
+
+        let cardClass = res.status === 'SUCCESS' ? 'valid' : res.status === 'EXPIRED' ? 'expired' : 'invalid';
+        let icon = res.status === 'SUCCESS' ? '🟢' : res.status === 'EXPIRED' ? '🟡' : '🔴';
+
+        if (res.playAudioChime) playAudioChime();
+
+        let resultHtml = `
+          <div class="scan-result-card ${cardClass}">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+              <div style="font-size: 24px; font-weight:800;">${icon} ${res.status}: ${res.reason}</div>
+              <span style="font-size:11px; background:rgba(0,0,0,0.4); padding: 4px 8px; border-radius:4px; font-family:monospace;">⚡ ${res.evalTimeMs}ms Response</span>
+            </div>
+        `;
+
+        if (res.status === 'EXPIRED' && res.canRenew) {
+          resultHtml += `
+            <div style="margin-top: 12px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: var(--radius-sm);">
+              <div style="font-size: 13px; font-weight:700; margin-bottom: 6px;">Staff Action Required:</div>
+              <button class="btn-primary btn-staff-renew" data-pass="${res.passId}" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); width:100%;">
+                💳 Offer 1-Tap Pass Renewal (₦3,500)
+              </button>
+            </div>
+          `;
+        }
+
+        resultHtml += `</div>`;
+        scanResultContainer.innerHTML = resultHtml;
+
+        document.querySelectorAll('.btn-staff-renew').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (store.renewPass(btn.dataset.pass)) {
+              alert('🎉 Pass Renewed Successfully! Access granted.');
+              renderGymPoolScannerView();
+            }
+          });
+        });
+      });
+    }
   }
 
-  let subtotal = 0;
-  container.innerHTML = state.cart.map(item => {
-    const itemTotal = item.subsidizedPrice * item.qty;
-    subtotal += itemTotal;
-    return `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--slate-100);">
-        <div>
-          <div style="font-size:13px; font-weight:800; color:var(--slate-900);">${item.name}</div>
-          <div style="font-size:11px; color:var(--slate-500);">₦${item.subsidizedPrice.toLocaleString()} x ${item.qty}</div>
+  // ==================== COURIER PORTAL RENDERER ====================
+  function renderCourierPortal() {
+    if (!courierOrdersGrid) return;
+
+    const orders = store.getBranchOrders();
+
+    // Render Orders List
+    let html = '';
+    let selectOptionsHtml = '<option value="">-- Choose Order --</option>';
+
+    orders.forEach(ord => {
+      if (ord.status !== 'DELIVERED' && ord.status !== 'CANCELLED') {
+        selectOptionsHtml += `<option value="${ord.id}">Order #${ord.id} - ${ord.recipientName || ord.customerName} (Code: ${ord.verificationCode})</option>`;
+      }
+
+      const isHouse = ord.mode === 'MODE_B';
+      const locationText = ord.locationHeader || (ord.tower ? `${ord.tower.toUpperCase()} ➔ ${ord.floor.toUpperCase()} ➔ ${ord.blockWing.toUpperCase()} ➔ ${ord.deskRoom.toUpperCase()}` : ord.address);
+
+      html += `
+        <div class="kds-card ${isHouse ? 'in-house' : ''}">
+          <!-- Location Header Bar at Top of Runner Screen -->
+          <div class="courier-location-header">
+            📍 ${locationText}
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <span class="card-badge ${isHouse ? 'badge-blue' : 'badge-gold'}" style="position:static;">
+              ${isHouse ? 'FLOOR SERVICE RUNNER' : 'TOWER DISPATCH DRIVER'}
+            </span>
+            <div class="code-box" style="font-size: 16px; padding: 2px 8px;">${ord.verificationCode}</div>
+          </div>
+
+          <div class="card-title" style="font-size: 16px;">Order #${ord.id}</div>
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
+            Recipient: <strong style="color: var(--text-main);">${ord.recipientName || ord.customerName}</strong>
+          </div>
+
+          <div style="font-size: 12px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: var(--radius-sm); margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center;">
+            <span>Status: <strong style="color: var(--gold-light);">${ord.status}</strong></span>
+            <button class="btn-primary btn-select-courier-order" data-id="${ord.id}" style="width:auto; padding: 4px 10px; font-size:11px;">
+              ⚡ Select & Verify PIN
+            </button>
+          </div>
         </div>
-        <div style="font-size:14px; font-weight:800; color:var(--nnpc-green);">₦${itemTotal.toLocaleString()}</div>
-      </div>
-    `;
-  }).join('');
+      `;
+    });
 
-  subtotalElem.innerText = `₦${subtotal.toLocaleString()}`;
-}
-
-function setFulfillment(method) {
-  state.fulfillmentMethod = method;
-  document.getElementById('fulfillment-delivery-btn').classList.toggle('active', method === 'DELIVERY');
-  document.getElementById('fulfillment-pickup-btn').classList.toggle('active', method === 'PICKUP');
-}
-
-function checkoutOrder() {
-  if (state.cart.length === 0) {
-    showToast('Your cart is empty!');
-    return;
-  }
-
-  const subtotal = state.cart.reduce((sum, item) => sum + (item.subsidizedPrice * item.qty), 0);
-  if (state.wallet.subsidyBalance < subtotal) {
-    showToast('Insufficient Subsidy Wallet balance!');
-    return;
-  }
-
-  state.wallet.subsidyBalance -= subtotal;
-  document.getElementById('header-wallet-balance').innerText = `₦${state.wallet.subsidyBalance.toLocaleString()}`;
-
-  const newOrder = {
-    id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
-    customerName: MOCK_DATA.users[state.currentRole].name,
-    staffId: MOCK_DATA.users[state.currentRole].staffId,
-    cafeteriaName: 'NNPC Towers Main Cafeteria',
-    deliveryBuilding: state.deliveryBuilding,
-    deliveryFloor: state.deliveryFloor,
-    deliveryDept: state.deliveryDept,
-    deliveryOffice: state.deliveryOffice,
-    fulfillmentMethod: state.fulfillmentMethod,
-    scheduledTime: document.getElementById('checkout-schedule-time').value,
-    items: [...state.cart],
-    total: subtotal,
-    status: 'PREPARING',
-    prepTimeRemaining: 12,
-    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    qrCode: `MEALPOINT-${Math.floor(1000 + Math.random() * 9000)}-VALID`
-  };
-
-  state.orders.unshift(newOrder);
-  state.cart = [];
-  updateCartBadge();
-  toggleCartDrawer();
-
-  showToast(`Order ${newOrder.id} placed successfully!`);
-  switchTab('orders');
-}
-
-function toggleNotificationsDrawer() {
-  const drawer = document.getElementById('notifications-drawer');
-  drawer.classList.toggle('open');
-}
-
-function renderNotificationsList() {
-  const container = document.getElementById('notifications-list');
-  container.innerHTML = state.notifications.map(n => `
-    <div class="notification-item ${n.unread ? 'unread' : ''}">
-      <div>
-        <div style="font-size:13px; font-weight:800; color:var(--slate-900);">${n.title}</div>
-        <div style="font-size:12px; color:var(--slate-600); margin-top:2px;">${n.message}</div>
-        <div style="font-size:10px; color:var(--slate-400); margin-top:4px;">${n.time}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Location Picker Modal
-function openLocationModal() {
-  document.getElementById('location-modal').style.display = 'flex';
-}
-function closeLocationModal() {
-  document.getElementById('location-modal').style.display = 'none';
-}
-function saveLocationSelection() {
-  state.deliveryBuilding = document.getElementById('modal-building-select').value;
-  state.deliveryFloor = document.getElementById('modal-floor-select').value;
-  state.deliveryDept = document.getElementById('modal-dept-select').value;
-  state.deliveryOffice = document.getElementById('modal-desk-input').value;
-  updateDeliveryPillText();
-  closeLocationModal();
-  showToast('Office delivery location updated!');
-}
-
-// QR Code Modal
-function openQRModal(orderId) {
-  const order = state.orders.find(o => o.id === orderId);
-  if (order) {
-    document.getElementById('qr-display-box').innerText = order.qrCode || `MEALPOINT-${order.id}`;
-    document.getElementById('qr-order-details').innerText = `Order #${order.id} • ${order.cafeteriaName}`;
-  }
-  document.getElementById('qr-modal').style.display = 'flex';
-}
-function closeQRModal() {
-  document.getElementById('qr-modal').style.display = 'none';
-}
-
-// Rating Modal
-function openRatingModal(mealId, mealName) {
-  state.ratingMealId = mealId;
-  document.getElementById('rating-meal-title').innerText = mealName;
-  document.getElementById('rating-modal').style.display = 'flex';
-}
-function closeRatingModal() {
-  document.getElementById('rating-modal').style.display = 'none';
-}
-function setRatingStar(num) {
-  state.ratingStar = num;
-  const stars = document.getElementById('star-rating-box').children;
-  for (let i = 0; i < stars.length; i++) {
-    stars[i].style.opacity = i < num ? '1' : '0.3';
-  }
-}
-function submitMealRating() {
-  closeRatingModal();
-  showToast(`Thank you! Submitted ${state.ratingStar}⭐ rating for your meal.`);
-}
-
-// Reorder Features
-function reorderSingleItem(itemId) {
-  addToCart(itemId);
-  toggleCartDrawer();
-}
-function reorderPastOrder(orderId) {
-  const order = state.orders.find(o => o.id === orderId);
-  if (order) {
-    order.items.forEach(item => addToCart(item.id));
-    toggleCartDrawer();
-  }
-}
-
-// KDS Availability Toggle
-function toggleMealAvailability(itemId) {
-  const item = state.menuItems.find(i => i.id === itemId);
-  if (item) {
-    item.isAvailable = !item.isAvailable;
-    renderMainContent();
-    showToast(`${item.name} marked as ${item.isAvailable ? 'Available' : 'Sold Out'}`);
-  }
-}
-
-// Vendor Menu Item Management
-function openVendorDishModal(itemId = null) {
-  const modal = document.getElementById('vendor-dish-modal');
-  const title = document.getElementById('vendor-modal-title');
-  const editId = document.getElementById('vendor-dish-edit-id');
-  const nameInput = document.getElementById('vendor-dish-name');
-  const catInput = document.getElementById('vendor-dish-category');
-  const priceInput = document.getElementById('vendor-dish-price');
-  const subPriceInput = document.getElementById('vendor-dish-subsidized-price');
-  const prepInput = document.getElementById('vendor-dish-prep-time');
-  const descInput = document.getElementById('vendor-dish-desc');
-  const imgInput = document.getElementById('vendor-dish-image');
-  const availInput = document.getElementById('vendor-dish-available');
-
-  if (itemId) {
-    const item = state.menuItems.find(i => i.id === itemId);
-    if (item) {
-      title.innerText = 'Edit Cafeteria Dish & Price';
-      editId.value = item.id;
-      nameInput.value = item.name;
-      catInput.value = item.category;
-      priceInput.value = item.price;
-      subPriceInput.value = item.subsidizedPrice;
-      prepInput.value = item.prepTime;
-      descInput.value = item.description;
-      imgInput.value = item.image;
-      availInput.checked = item.isAvailable;
+    if (orders.length === 0) {
+      html = `<div style="padding: 20px; color: var(--text-muted);">No active delivery tasks.</div>`;
     }
-  } else {
-    title.innerText = 'Add New Cafeteria Dish';
-    editId.value = '';
-    nameInput.value = '';
-    catInput.value = 'LOCAL_DISHES';
-    priceInput.value = '';
-    subPriceInput.value = '';
-    prepInput.value = '12';
-    descInput.value = '';
-    imgInput.value = '';
-    availInput.checked = true;
+
+    courierOrdersGrid.innerHTML = html;
+    if (verificationOrderSelect) verificationOrderSelect.innerHTML = selectOptionsHtml;
+
+    document.querySelectorAll('.btn-select-courier-order').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (verificationOrderSelect) {
+          verificationOrderSelect.value = btn.dataset.id;
+          if (verificationCodeInput) verificationCodeInput.focus();
+        }
+      });
+    });
   }
 
-  modal.style.display = 'flex';
-}
+  // ==================== SUPER ADMIN PORTAL RENDERER ====================
+  function renderAdminPortal() {
+    if (!adminOrdersTableBody) return;
 
-function closeVendorDishModal() {
-  document.getElementById('vendor-dish-modal').style.display = 'none';
-}
+    const allOrders = store.orders;
+    const breaches = store.getSLABreaches();
 
-function saveVendorDish() {
-  const editId = document.getElementById('vendor-dish-edit-id').value;
-  const name = document.getElementById('vendor-dish-name').value.trim();
-  const category = document.getElementById('vendor-dish-category').value;
-  const price = parseInt(document.getElementById('vendor-dish-price').value) || 0;
-  const subsidizedPrice = parseInt(document.getElementById('vendor-dish-subsidized-price').value) || 0;
-  const prepTime = parseInt(document.getElementById('vendor-dish-prep-time').value) || 10;
-  const description = document.getElementById('vendor-dish-desc').value.trim();
-  let image = document.getElementById('vendor-dish-image').value.trim();
-  const isAvailable = document.getElementById('vendor-dish-available').checked;
+    // Update Stats
+    const totalRev = allOrders.reduce((sum, o) => sum + (o.status !== 'CANCELLED' ? o.total : 0), 0) + 75000 + 45000;
+    if (statTotalRevenue) statTotalRevenue.textContent = `₦${totalRev.toLocaleString()}`;
+    if (statActiveDeliveries) statActiveDeliveries.textContent = `${allOrders.filter(o => o.status !== 'DELIVERED').length} Live`;
+    if (statRoomOccupancy) statRoomOccupancy.textContent = `75%`;
+    if (statSLABreaches) statSLABreaches.textContent = `${breaches.length} Breaches`;
 
-  if (!name || price <= 0 || subsidizedPrice <= 0) {
-    showToast('Please fill in dish name and prices!');
-    return;
-  }
-
-  if (!image) {
-    image = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80';
-  }
-
-  if (editId) {
-    const item = state.menuItems.find(i => i.id === editId);
-    if (item) {
-      item.name = name;
-      item.category = category;
-      item.price = price;
-      item.subsidizedPrice = subsidizedPrice;
-      item.prepTime = prepTime;
-      item.description = description;
-      item.image = image;
-      item.isAvailable = isAvailable;
-      showToast(`Updated ${name} successfully!`);
+    // Render SLA Alert Banner
+    if (breaches.length > 0) {
+      slaAlertBannerContainer.innerHTML = `
+        <div style="background: rgba(239,68,68,0.15); border: 2px solid var(--color-danger); border-radius: var(--radius-md); padding: 14px 20px; color: #FCA5A5; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">🚨</span>
+          <div>
+            <strong>CRITICAL SLA BREACH ALERT (${breaches.length} Order/s Delayed):</strong>
+            <div style="font-size: 12px; margin-top: 2px;">
+              ${breaches.map(b => `Order #${b.id} (${b.branch.toUpperCase()}) kitchen prep exceeded target by &gt;5 mins.`).join(' | ')}
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      slaAlertBannerContainer.innerHTML = '';
     }
-  } else {
-    const newItem = {
-      id: `item-${Date.now()}`,
-      cafeteriaId: 'caf-1',
-      name,
-      category,
-      price,
-      subsidizedPrice,
-      prepTime,
-      description: description || 'Delicious freshly prepared cafeteria specialty.',
-      image,
-      stock: 30,
-      rating: 5.0,
-      isAvailable,
-      isSpecial: false
-    };
-    state.menuItems.unshift(newItem);
-    showToast(`Added new dish: ${name}!`);
+
+    // Render Admin Audit Table
+    let tableHtml = '';
+    allOrders.forEach(ord => {
+      tableHtml += `
+        <tr>
+          <td style="font-weight: 700; color: var(--gold-light);">${ord.id}</td>
+          <td><span class="card-badge badge-gold" style="position:static;">${ord.branch.toUpperCase()}</span></td>
+          <td>${ord.mode}</td>
+          <td>${ord.customerName} ${ord.roomNo ? `(${ord.roomNo})` : ''}</td>
+          <td>₦${ord.total.toLocaleString()}</td>
+          <td>
+            <span class="card-badge ${ord.status === 'DELIVERED' ? 'badge-green' : 'badge-gold'}" style="position:static;">
+              ${ord.status}
+            </span>
+          </td>
+        </tr>
+      `;
+    });
+
+    adminOrdersTableBody.innerHTML = tableHtml;
+
+    // Render Admin Out-of-Stock Controls
+    const foods = store.getBranchFood();
+    let invHtml = '';
+    foods.forEach(f => {
+      invHtml += `
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: var(--radius-sm);">
+          <div>
+            <div style="font-size: 13px; font-weight:700;">${f.name}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">₦${f.price.toLocaleString()}</div>
+          </div>
+          <button class="btn-toggle-avail" data-id="${f.id}" style="background: ${f.available ? 'var(--color-success)' : 'var(--color-danger)'}; color: #000; border:none; padding: 4px 10px; border-radius: 9999px; font-weight: 700; font-size: 11px; cursor: pointer;">
+            ${f.available ? 'AVAILABLE' : 'OUT OF STOCK'}
+          </button>
+        </div>
+      `;
+    });
+
+    adminInventoryList.innerHTML = invHtml;
+
+    document.querySelectorAll('.btn-toggle-avail').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = foods.find(f => f.id === btn.dataset.id);
+        if (item) {
+          item.available = !item.available;
+          store.notify();
+        }
+      });
+    });
   }
 
-  closeVendorDishModal();
-  renderMainContent();
-}
-
-function deleteVendorDish(itemId) {
-  const item = state.menuItems.find(i => i.id === itemId);
-  if (!item) return;
-  
-  state.menuItems = state.menuItems.filter(i => i.id !== itemId);
-  renderMainContent();
-  showToast(`Deleted ${item.name} from cafeteria menu.`);
-}
-
-function advanceOrderStatus(orderId, nextStatus) {
-  const order = state.orders.find(o => o.id === orderId);
-  if (order) {
-    order.status = nextStatus;
-    renderMainContent();
-    showToast(`Order ${orderId} updated to ${nextStatus.replace('_', ' ')}`);
-  }
-}
-
-// Wallet Topup
-function openWalletTopupModal() {
-  document.getElementById('wallet-topup-modal').style.display = 'flex';
-}
-function closeWalletTopupModal() {
-  document.getElementById('wallet-topup-modal').style.display = 'none';
-}
-function selectTopupAmount(amt) {
-  document.getElementById('custom-topup-amount').value = amt;
-}
-function confirmWalletTopup() {
-  const amt = parseInt(document.getElementById('custom-topup-amount').value) || 0;
-  if (amt <= 0) return;
-  state.wallet.personalBalance += amt;
-  closeWalletTopupModal();
-  renderMainContent();
-  showToast(`Successfully added ₦${amt.toLocaleString()} to Personal Wallet!`);
-}
-
-// Vendor Audio Alert Toggle
-function toggleAudioAlert() {
-  state.audioAlert = !state.audioAlert;
-  renderMainContent();
-  showToast(`Audio alerts ${state.audioAlert ? 'ENABLED 🔔' : 'MUTED 🔕'}`);
-}
-
-// Vendor Reject Order
-function openVendorRejectModal(orderId) {
-  document.getElementById('reject-order-id').value = orderId;
-  document.getElementById('vendor-reject-modal').style.display = 'flex';
-}
-function closeVendorRejectModal() {
-  document.getElementById('vendor-reject-modal').style.display = 'none';
-}
-function confirmVendorOrderRejection() {
-  const orderId = document.getElementById('reject-order-id').value;
-  const reason = document.getElementById('reject-reason-select').value;
-  state.orders = state.orders.filter(o => o.id !== orderId);
-  closeVendorRejectModal();
-  renderMainContent();
-  showToast(`Order ${orderId} rejected. Reason: ${reason}`);
-}
-
-// Printable KDS Receipt Modal
-function openReceiptModal(orderId) {
-  const order = state.orders.find(o => o.id === orderId);
-  if (order) {
-    document.getElementById('receipt-order-id').innerText = order.id;
-    document.getElementById('receipt-date').innerText = order.timestamp;
-    document.getElementById('receipt-customer-name').innerText = order.customerName;
-    document.getElementById('receipt-staff-id').innerText = order.staffId || 'NNPC/ENG/2021/4892';
-    document.getElementById('receipt-location').innerText = `${order.deliveryBuilding} • ${order.deliveryFloor} • ${order.deliveryOffice}`;
-    document.getElementById('receipt-code-display').innerText = order.qrCode ? order.qrCode.split('-')[1] : '9821';
-    document.getElementById('receipt-total-amount').innerText = `₦${order.total.toLocaleString()}`;
-
-    const itemsContainer = document.getElementById('receipt-items-list');
-    itemsContainer.innerHTML = order.items.map(i => `
-      <div style="display:flex; justify-content:space-between; padding:4px 0;">
-        <span>[x] ${i.name} (x${i.qty || 1})</span>
-        <span>₦${((i.subsidizedPrice || i.price) * (i.qty || 1)).toLocaleString()}</span>
-      </div>
-    `).join('');
-  }
-  document.getElementById('receipt-modal').style.display = 'flex';
-}
-function closeReceiptModal() {
-  document.getElementById('receipt-modal').style.display = 'none';
-}
-
-// Extend Prep Time
-function extendPrepTime(orderId, mins) {
-  const order = state.orders.find(o => o.id === orderId);
-  if (order) {
-    order.prepTimeRemaining = (order.prepTimeRemaining || 10) + mins;
-    renderMainContent();
-    showToast(`Extended preparation time by +${mins} minutes for Order ${orderId}`);
-  }
-}
-
-// Courier Proof Modal Handlers
-function openCourierProofModal(orderId) {
-  document.getElementById('courier-deliver-order-id').value = orderId;
-  document.getElementById('courier-customer-code').value = '';
-  document.getElementById('photo-upload-status').style.display = 'none';
-  document.getElementById('courier-proof-modal').style.display = 'flex';
-}
-function closeCourierProofModal() {
-  document.getElementById('courier-proof-modal').style.display = 'none';
-}
-function simulatePhotoUpload() {
-  document.getElementById('photo-upload-status').style.display = 'block';
-  showToast('Desk Photo Proof Uploaded!');
-}
-function confirmCourierDelivery() {
-  const orderId = document.getElementById('courier-deliver-order-id').value;
-  const order = state.orders.find(o => o.id === orderId || o.id === 'ORD-9821');
-  if (order) {
-    order.status = 'DELIVERED';
-  }
-  
-  MOCK_DATA.users.COURIER.earningsToday += 1200;
-  MOCK_DATA.users.COURIER.completedDeliveriesToday += 1;
-  
-  closeCourierProofModal();
-  renderMainContent();
-  showToast('Order delivered successfully! ₦1,200 credited to courier earnings.');
-}
-
-// Helper Toast Alert
-function showToast(msg) {
-  const toast = document.createElement('div');
-  toast.innerText = msg;
-  toast.style.cssText = `
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--slate-900);
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 700;
-    z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    border-left: 4px solid var(--nnpc-gold);
-    animation: fadeIn 0.2s ease;
-  `;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
+  // Initial Render Call
+  renderAll();
+});
