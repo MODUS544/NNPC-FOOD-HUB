@@ -1,5 +1,5 @@
 /**
- * City Star Super-App Platform & AI Orchestration Engine
+ * NNPC Meal Point Super-App Platform & AI Orchestration Engine
  * Central Reactive Store & Live Dispatch System
  */
 
@@ -16,7 +16,7 @@ class CityStarStore {
     
     // Brand Metadata
     this.brand = {
-      name: "City Star Restaurant & Accommodation",
+      name: "NNPC Meal Point",
       logoUrl: "https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=100030783744713"
     };
 
@@ -27,13 +27,13 @@ class CityStarStore {
     this.branches = {
       maiduguri: { 
         id: 'maiduguri',
-        name: 'City Star Maiduguri', 
+        name: 'NNPC Meal Point Maiduguri', 
         heroImage: 'https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=704494793919972',
         address: 'Sir Kashim Ibrahim Way, Maiduguri' 
       },
       gombe: { 
         id: 'gombe',
-        name: 'City Star Gombe', 
+        name: 'NNPC Meal Point Gombe', 
         heroImage: 'https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=704494793919972',
         address: 'Commercial Area, Gombe' 
       }
@@ -116,7 +116,7 @@ class CityStarStore {
           { id: 'f1', name: 'Suya Spiced Grilled Chicken', category: 'Grill & BBQ', price: 6500, prepTime: 12, available: true, image: '🍗' },
           { id: 'f2', name: 'Kanem Masa & Mutton Stew', category: 'Local Delicacies', price: 4200, prepTime: 15, available: true, image: '🍲' },
           { id: 'f3', name: 'Royal Fried Rice & Jumbo Prawns', category: 'Executive Dining', price: 8900, prepTime: 18, available: true, image: '🍤' },
-          { id: 'f4', name: 'Signature City Star Mocktail', category: 'Beverages', price: 2500, prepTime: 5, available: true, image: '🍹' }
+          { id: 'f4', name: 'Signature NNPC Mocktail', category: 'Beverages', price: 2500, prepTime: 5, available: true, image: '🍹' }
         ],
         rooms: [
           { id: 'r101', type: 'Executive Gold Suite', roomNo: '101', price: 75000, lockedUntil: null, status: 'available', features: ['King Bed', 'Pool View', 'Free Spa'] },

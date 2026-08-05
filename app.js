@@ -1,5 +1,5 @@
 /**
- * City Star Super-App Platform & AI Orchestration Engine
+ * NNPC Meal Point Super-App Platform & AI Orchestration Engine
  * UI Controller & Dynamic Render Engine
  */
 
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       <!-- The Three Pillars (Prominent Styled Cards) -->
       <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--gold-light); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">
-        Explore City Star Experience
+        Explore NNPC Meal Point Experience
       </h3>
 
       <div class="pillars-grid">
@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // SCREEN D: "Your City Star Pass" (Facility / Recreation / Account Hub)
+  // SCREEN D: "Your NNPC Meal Point Pass" (Facility / Recreation / Account Hub)
   function renderPassScreenD() {
     const passes = store.userPasses.filter(p => p.branch === store.currentBranch);
     const orders = store.getBranchOrders();
@@ -560,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let html = `
       <h2 style="font-family: var(--font-heading); font-size: 22px; color: #C084FC; margin-bottom: 14px;">
-        🎟️ Screen D: "Your City Star Pass" & Digital Access Hub
+        🎟️ Screen D: "Your NNPC Meal Point Pass" & Digital Access Hub
       </h2>
 
       <!-- Master Dynamic QR Pass Card -->
@@ -786,7 +786,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="form-group">
           <label class="form-label">Payment Method</label>
           <select id="inputPaymentMethod" class="form-input">
-            <option value="Wallet">City Star Wallet (₦${store.userWallet.toLocaleString()})</option>
+            <option value="Wallet">NNPC Meal Point Wallet (₦${store.userWallet.toLocaleString()})</option>
           </select>
         </div>
       `;
@@ -848,7 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="form-group">
           <label class="form-label">Payment Method</label>
           <select id="inputPaymentMethod" class="form-input">
-            <option value="Wallet">City Star Wallet (₦${store.userWallet.toLocaleString()})</option>
+            <option value="Wallet">NNPC Meal Point Wallet (₦${store.userWallet.toLocaleString()})</option>
             <option value="Room Folio">Charge to Guest Room Folio</option>
           </select>
         </div>
