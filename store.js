@@ -113,10 +113,10 @@ class CityStarStore {
     this.inventory = {
       maiduguri: {
         food: [
-          { id: 'f1', name: 'Suya Spiced Grilled Chicken', category: 'Grill & BBQ', price: 6500, prepTime: 12, available: true, image: '🍗' },
-          { id: 'f2', name: 'Kanem Masa & Mutton Stew', category: 'Local Delicacies', price: 4200, prepTime: 15, available: true, image: '🍲' },
-          { id: 'f3', name: 'Royal Fried Rice & Jumbo Prawns', category: 'Executive Dining', price: 8900, prepTime: 18, available: true, image: '🍤' },
-          { id: 'f4', name: 'Signature NNPC Mocktail', category: 'Beverages', price: 2500, prepTime: 5, available: true, image: '🍹' }
+          { id: 'f1', name: 'NNPC Special Jollof & Grilled Chicken', category: 'Staff Combo', price: 4500, prepTime: 10, available: true, image: '🍗' },
+          { id: 'f2', name: 'Kanem Masa & Mutton Pepper Gravy', category: 'Local Delicacies', price: 4200, prepTime: 12, available: true, image: '🍲' },
+          { id: 'f3', name: 'Executive Seafood Fried Rice & Prawns', category: 'Executive Boardroom', price: 8900, prepTime: 15, available: true, image: '🍤' },
+          { id: 'f4', name: 'Signature NNPC Energy Smoothie', category: 'Beverages', price: 2500, prepTime: 5, available: true, image: '🍹' }
         ],
         rooms: [
           { id: 'r101', type: 'Executive Gold Suite', roomNo: '101', price: 75000, lockedUntil: null, status: 'available', features: ['King Bed', 'Pool View', 'Free Spa'] },

@@ -2,20 +2,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --bg-dark: #090C10;
-  --bg-card: #121721;
-  --bg-card-hover: #1A212F;
-  --bg-glass: rgba(18, 23, 33, 0.85);
+  --bg-dark: #0A1118;
+  --bg-card: #111C28;
+  --bg-card-hover: #182636;
+  --bg-glass: rgba(17, 28, 40, 0.85);
   
-  --gold-primary: #D4AF37;
-  --gold-light: #F3E5AB;
-  --gold-gradient: linear-gradient(135deg, #E6C667 0%, #B8860B 100%);
+  --nnpc-green: #008751;
+  --nnpc-green-light: #34D399;
+  --nnpc-green-gradient: linear-gradient(135deg, #00A86B 0%, #006633 100%);
+  
+  --gold-primary: #008751;
+  --gold-light: #34D399;
+  --gold-gradient: linear-gradient(135deg, #00A86B 0%, #006633 100%);
   
   --text-main: #F0F4F8;
-  --text-muted: #8A99AD;
-  --text-gold: #E5C158;
+  --text-muted: #8B9BB4;
+  --text-gold: #34D399;
+  --text-green: #34D399;
   
-  --border-color: rgba(212, 175, 55, 0.18);
+  --border-color: rgba(0, 135, 81, 0.35);
   --border-subtle: rgba(255, 255, 255, 0.08);
   
   --color-success: #10B981;
@@ -24,8 +29,8 @@
   --color-info: #06B6D4;
   --color-purple: #8B5CF6;
   
-  --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.15);
-  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-gold: 0 4px 20px rgba(0, 135, 81, 0.25);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.45);
   
   --radius-sm: 8px;
   --radius-md: 14px;

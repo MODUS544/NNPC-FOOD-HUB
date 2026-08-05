@@ -230,27 +230,27 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="hero-carousel-container">
         <div class="carousel-slides" id="carouselSlides" style="transform: translateX(-${carouselSlideIndex * 33.333}%);">
           <div class="carousel-slide">
-            <img src="${activeBranch.heroImage}" alt="${activeBranch.name}" class="carousel-img" onerror="this.src='https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80'">
+            <img src="${activeBranch.heroImage}" alt="${activeBranch.name}" class="carousel-img" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'">
             <div class="carousel-caption">
-              <span class="card-badge badge-gold" style="position:static; margin-bottom: 4px; display:inline-block;">PREMIUM RESORT & SUITES</span>
+              <span class="card-badge badge-green" style="position:static; margin-bottom: 4px; display:inline-block;">NNPC CORPORATE CATERING</span>
               <h2 style="font-family: var(--font-heading); font-size: 24px; color: #FFF; font-weight:800;">Welcome to ${activeBranch.name}</h2>
-              <p style="font-size: 12px; color: var(--gold-light);">${activeBranch.address}</p>
+              <p style="font-size: 12px; color: var(--nnpc-green-light);">${activeBranch.address}</p>
             </div>
           </div>
           <div class="carousel-slide">
-            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80" alt="Executive Suites" class="carousel-img">
+            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=80" alt="Executive Complex" class="carousel-img">
             <div class="carousel-caption">
-              <span class="card-badge badge-green" style="position:static; margin-bottom: 4px; display:inline-block;">LUXURY ACCOMMODATION</span>
-              <h2 style="font-family: var(--font-heading); font-size: 24px; color: #FFF; font-weight:800;">Executive Suites & Private Chalets</h2>
-              <p style="font-size: 12px; color: var(--text-muted);">10-minute hold lock booking engine ready</p>
+              <span class="card-badge badge-gold" style="position:static; margin-bottom: 4px; display:inline-block;">4-TIER TOWER DESK DROP</span>
+              <h2 style="font-family: var(--font-heading); font-size: 24px; color: #FFF; font-weight:800;">Precision Office Delivery Engine</h2>
+              <p style="font-size: 12px; color: var(--text-muted);">Direct to Tower A-D, Floor 1-11, Block & Desk ID</p>
             </div>
           </div>
           <div class="carousel-slide">
-            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80" alt="Suya Gourmet Buffet" class="carousel-img">
+            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80" alt="NNPC Gourmet Staff Menu" class="carousel-img">
             <div class="carousel-caption">
-              <span class="card-badge badge-blue" style="position:static; margin-bottom: 4px; display:inline-block;">GOURMET DINING</span>
-              <h2 style="font-family: var(--font-heading); font-size: 24px; color: #FFF; font-weight:800;">Signature Suya & Royal Prawns</h2>
-              <p style="font-size: 12px; color: var(--text-muted);">In-room dining & 90s external courier dispatch</p>
+              <span class="card-badge badge-blue" style="position:static; margin-bottom: 4px; display:inline-block;">EXECUTIVE CATERING</span>
+              <h2 style="font-family: var(--font-heading); font-size: 24px; color: #FFF; font-weight:800;">Boardroom & Staff Gourmet Buffet</h2>
+              <p style="font-size: 12px; color: var(--text-muted);">Subsidized NNPC Staff Allowance & Instant Runner Dispatch</p>
             </div>
           </div>
         </div>
@@ -262,28 +262,28 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
 
-      <!-- The Three Pillars (Prominent Styled Cards) -->
-      <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--gold-light); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">
-        Explore NNPC Meal Point Experience
+      <!-- The Three NNPC Corporate Pillars -->
+      <h3 style="font-family: var(--font-heading); font-size: 18px; color: var(--nnpc-green-light); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">
+        NNPC Staff Catering & Meal Point Logistics
       </h3>
 
       <div class="pillars-grid">
-        <div class="pillar-card pillar-stay" id="btnPillarStay">
-          <span class="pillar-icon">🏨</span>
-          <div class="pillar-title" style="color: #34D399;">STAY</div>
-          <div class="pillar-desc">Hotel Room & Chalet Booking Engine</div>
+        <div class="pillar-card pillar-eat" id="btnPillarEat">
+          <span class="pillar-icon">🍱</span>
+          <div class="pillar-title" style="color: var(--nnpc-green-light);">MEAL POINT</div>
+          <div class="pillar-desc">Tower Desk Drop & Staff Dining</div>
         </div>
 
-        <div class="pillar-card pillar-eat" id="btnPillarEat">
-          <span class="pillar-icon">🍔</span>
-          <div class="pillar-title" style="color: var(--gold-light);">EAT</div>
-          <div class="pillar-desc">Food Delivery, Pick-up & Room Service</div>
+        <div class="pillar-card pillar-stay" id="btnPillarStay">
+          <span class="pillar-icon">💳</span>
+          <div class="pillar-title" style="color: #34D399;">ALLOWANCE</div>
+          <div class="pillar-desc">Staff Subsidy & Monthly Credits</div>
         </div>
 
         <div class="pillar-card pillar-play" id="btnPillarPlay">
-          <span class="pillar-icon">🏊</span>
-          <div class="pillar-title" style="color: #C084FC;">PLAY</div>
-          <div class="pillar-desc">Gym & Pool Access Passes & Master QR</div>
+          <span class="pillar-icon">🎟️</span>
+          <div class="pillar-title" style="color: #C084FC;">STAFF PASS</div>
+          <div class="pillar-desc">Digital Turnstile & Meal Verification QR</div>
         </div>
       </div>
 
