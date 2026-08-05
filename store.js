@@ -3,7 +3,7 @@
  * Central Reactive Store & Live Dispatch System
  */
 
-class CityStarStore {
+class NnpcStore {
   constructor() {
     this.currentBranch = 'maiduguri'; // 'maiduguri' | 'gombe'
     this.activeRole = 'user'; // 'user' | 'merchant' | 'courier' | 'admin'
@@ -183,7 +183,7 @@ class CityStarStore {
     const secondsRemaining = 60 - (timestamp % 60);
     
     // Hash string payload containing passId + branch + windowSec
-    const encryptedPayload = `CITYSTAR:${this.currentBranch.toUpperCase()}:${passId}:W${windowSec}:${(windowSec * 997) % 10000}`;
+    const encryptedPayload = `NNPC:${this.currentBranch.toUpperCase()}:${passId}:W${windowSec}:${(windowSec * 997) % 10000}`;
     
     return {
       payload: encryptedPayload,
@@ -197,7 +197,7 @@ class CityStarStore {
     const startTime = performance.now();
     try {
       const parts = payloadString.split(':');
-      if (parts.length < 5 || parts[0] !== 'CITYSTAR') {
+      if (parts.length < 5 || parts[0] !== 'NNPC') {
         return { 
           status: 'MISMATCH', 
           reason: 'INVALID TOKEN - Unrecognized QR signature format', 
@@ -535,4 +535,4 @@ class CityStarStore {
 }
 
 // Global Singleton Instance
-window.cityStarStore = new CityStarStore();
+window.nnpcStore = new NnpcStore();

@@ -4,7 +4,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const store = window.cityStarStore;
+  const store = window.nnpcStore;
 
   // Cache DOM Elements
   const branchSelector = document.getElementById('branchSelector');
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderUserSidePanel();
   }
 
-  // SCREEN A: The City Star Hub (Home Entry Point)
+  // SCREEN A: The NNPC Meal Point Hub (Home Entry Point)
   function renderHubScreenA() {
     const activeBranch = store.branches[store.currentBranch];
     const activeOrders = store.getBranchOrders().filter(o => o.status !== 'DELIVERED' && o.status !== 'CANCELLED');
